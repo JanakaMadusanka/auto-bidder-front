@@ -1,9 +1,10 @@
 import './App.css'
+import NavBar from './templates/NavBar'
 
 const App = () => {
   return (
     <div>
-      <h1 className='text-slate-600'>Auto Bidder App</h1>
+      <NavBar/>
     </div>
   )
 }
