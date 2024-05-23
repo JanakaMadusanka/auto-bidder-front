@@ -3,7 +3,7 @@ import './App.css'
 const App = () => {
   return (
     <div>
-      <h1>Auto Bidder App</h1>
+      <h1 className='text-slate-600'>Auto Bidder App</h1>
     </div>
   )
 }
