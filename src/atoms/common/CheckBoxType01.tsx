@@ -2,11 +2,12 @@ interface CheckBoxType01Props {
     label?: string;
     checked?: boolean;
     onChange?: () => void;
+    classes?:string;
 }
 
-const CheckBoxType01 = ({ label,checked,onChange }: CheckBoxType01Props) => {
+const CheckBoxType01 = ({ label,checked,onChange,classes }: CheckBoxType01Props) => {
     return (
-        <div className="flex items-center space-x-2">
+        <div className={`flex items-center space-x-2 ${classes}`}>
             <input
                 type="checkbox"
                 checked={checked}

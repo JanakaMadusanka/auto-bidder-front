@@ -1,22 +1,36 @@
 import React, { useState } from 'react';
 import logo from '../assets/common/Logo2.png'
 import LoginModal from '../organisms/common/LoginModal';
+import RegistrationModal from '../organisms/common/RegistrationModal';
 
 const NavBar: React.FC = () => {
 
-    const [visibility, setVisibility] = useState(false)
-
+    const [loginVisibility, setLoginVisibility] = useState(false)
+    const [registerVisibility, setRegisterVisibility] = useState(false)
 
     function loginButtonOnAction() {
-        setVisibility(true);
+        setLoginVisibility(true);
     }
     function closeLoginModal() {
-        setVisibility(false);
+        setLoginVisibility(false);
     }
-    function handleOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
+    function handleLoginOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
         // Close the modal if the click is on the overlay, not inside the modal content
         if (e.target === e.currentTarget) {
             closeLoginModal();
+        }
+    }
+
+    function registerButtonOnAction() {
+        setRegisterVisibility(true);
+    }
+    function closeRegisterModal() {
+        setRegisterVisibility(false);
+    }
+    function handleRegisterOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
+        // Close the modal if the click is on the overlay, not inside the modal content
+        if (e.target === e.currentTarget) {
+            closeRegisterModal();
         }
     }
 
@@ -36,18 +50,27 @@ const NavBar: React.FC = () => {
                     </div>
                     <div>
                         <button onClick={loginButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Login</button>
-                        <button className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Register</button>
+                        <button onClick={registerButtonOnAction}  className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Register</button>
                     </div>
                 </div>
             </nav>
 
             {/* body */}
-            {visibility && (
+            {loginVisibility && (
                 <div
                     className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                    onClick={handleOverlayClick}
+                    onClick={handleLoginOverlayClick}
                 >
                     <LoginModal />
+                </div>
+            )}
+
+            {registerVisibility && (
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    onClick={handleRegisterOverlayClick}
+                >
+                    <RegistrationModal />
                 </div>
             )}
         </div>
