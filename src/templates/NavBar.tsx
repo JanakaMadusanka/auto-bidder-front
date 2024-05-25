@@ -3,7 +3,16 @@ import logo from '../assets/common/Logo2.png'
 import LoginModal from '../organisms/common/LoginModal';
 import RegistrationModal from '../organisms/common/RegistrationModal';
 
-const NavBar: React.FC = () => {
+interface NavBarProps {
+    homeButtonOnAction?:()=>void;
+    auctionButtonOnAction?:()=>void;
+    sellButtonOnAction?:()=>void;
+    myAuctionButtonOnAction?:()=>void;
+    aboutButtonOnAction?:()=>void;
+    contactButtonOnAction?:()=>void;
+}
+
+const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction, myAuctionButtonOnAction, aboutButtonOnAction, contactButtonOnAction }: NavBarProps) => {
 
     const [loginVisibility, setLoginVisibility] = useState(false)
     const [registerVisibility, setRegisterVisibility] = useState(false)
@@ -33,7 +42,7 @@ const NavBar: React.FC = () => {
             closeRegisterModal();
         }
     }
-
+    // set navitation
     return (
         <div>
             {/* hedder */}
@@ -42,15 +51,16 @@ const NavBar: React.FC = () => {
                     <div className="size-20"><img src={logo} alt="" /></div>
                     <div className="text-[40px] font-bold">Auto Bidder</div>
                     <div className="hidden md:flex space-x-10">
-                        <a href="#" className="hover:text-gray-400 hover:underline-offset-2">Home</a>
-                        <a href="#" className="hover:text-gray-400">About</a>
-                        <a href="#" className="hover:text-gray-400">Services</a>
-                        <a href="#" className="hover:text-gray-400">Contact</a>
-
+                        <button onClick={homeButtonOnAction} className="hover:text-gray-400 hover:underline-offset-2">Home</button>
+                        <button onClick={auctionButtonOnAction} className="hover:text-gray-400">Auctions</button>
+                        <button onClick={sellButtonOnAction} className="hover:text-gray-400">Sell</button>
+                        <button onClick={myAuctionButtonOnAction} className="hover:text-gray-400">My Auctions</button>
+                        <button onClick={aboutButtonOnAction} className="hover:text-gray-400">About</button>
+                        <button onClick={contactButtonOnAction} className="hover:text-gray-400">Contact</button>
                     </div>
                     <div>
                         <button onClick={loginButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Login</button>
-                        <button onClick={registerButtonOnAction}  className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Register</button>
+                        <button onClick={registerButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Register</button>
                     </div>
                 </div>
             </nav>
