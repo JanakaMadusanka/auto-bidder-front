@@ -6,6 +6,7 @@ interface PasswordFieldProps {
 }
 const InputFieldType01 = ({ title,inputType,classNames,inputSize}: PasswordFieldProps) => {
 
+
     return (
         <div className={`place-items-center w-full ${classNames}`}>
             <div><p >{`${title} :`}</p></div >
@@ -14,3 +15,4 @@ const InputFieldType01 = ({ title,inputType,classNames,inputSize}: PasswordField
     )
 }
 export default InputFieldType01
+

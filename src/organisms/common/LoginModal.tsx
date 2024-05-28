@@ -1,6 +1,7 @@
 import ButtonType01 from "../../atoms/common/ButtonType01";
 import CheckBoxType01 from "../../atoms/common/CheckBoxType01";
 import InputFieldType01 from "../../atoms/common/InputFieldType01";
+import InputFieldTypePassword from "../../atoms/common/InputFieldTypePassword";
 
 const LoginModal = () => {
 
@@ -14,7 +15,7 @@ const LoginModal = () => {
 
         <div className="text-gray-600 text-sm">
           <InputFieldType01 title='e-mail' classNames="mt-6" />
-          <InputFieldType01 title='Password' inputType="password" classNames="mt-6" />
+          <InputFieldTypePassword title='Password' classNames="mt-6" />
           <div className="mt-6">
             <CheckBoxType01 label="Remember me?" />
           </div>

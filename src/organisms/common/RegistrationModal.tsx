@@ -1,6 +1,7 @@
 import ButtonType01 from "../../atoms/common/ButtonType01";
 import CheckBoxType01 from "../../atoms/common/CheckBoxType01";
 import InputFieldType01 from "../../atoms/common/InputFieldType01";
+import InputFieldTypePassword from "../../atoms/common/InputFieldTypePassword";
 
 const RegistrationModal = () => {
 
@@ -14,8 +15,8 @@ const RegistrationModal = () => {
           <InputFieldType01 title='First Name' classNames="mt-4" />
           <InputFieldType01 title='Last Name' classNames="mt-4" />
           <InputFieldType01 title='e-mail' classNames="mt-4" />
-          <InputFieldType01 title='Password' inputType="password" classNames="mt-4" />
-          <InputFieldType01 title='Confirm Password' inputType="password" classNames="mt-4" />
+          <InputFieldTypePassword title='Password' classNames="mt-4" />
+          <InputFieldTypePassword title='Confirm Password' classNames="mt-4" />
           <div className="mt-4">
             <label htmlFor="">Select User Role/Roles :</label>
             <div className="grid grid-cols-2 mt-1">
