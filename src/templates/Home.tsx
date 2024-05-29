@@ -38,9 +38,9 @@ const Home = () => {
                     className="h-full w-full object-cover"
                 />
             </Carousel>
-            <div className="absolute">
+            {/* <div className="absolute">
                 <p className="text-4xl">Online Auto Auction for User Vehicle in Sri Lanka</p>
-            </div>
+            </div> */}
         </div>
     )
 }
