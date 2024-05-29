@@ -16,7 +16,7 @@ const InputFieldTypePassword = ({ title, classNames, inputSize }: props) => {
 
     return (
         <div className={`place-items-center w-full ${classNames}`}>
-            <div><p >{`${title} :`}</p></div >
+            <div className="font-semibold"><p >{`${title} :`}</p></div >
             <div className="relative">
                 <input
                     type={passwordVisible ? 'text' : 'password'}

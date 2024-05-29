@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import logo from '../assets/common/Logo1.png'
+import LoginModal from '../organisms/common/LoginModal';
+import RegistrationModal from '../organisms/common/RegistrationModal';
 
 interface FooterProps {
     homeButtonOnAction?: () => void;
@@ -7,11 +10,38 @@ interface FooterProps {
     myAuctionButtonOnAction?: () => void;
     aboutButtonOnAction?: () => void;
     contactButtonOnAction?: () => void;
-    loginButtonOnAction?: () => void;
-    registerButtonOnAction?: () => void;
 }
 
-const Footer = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction, myAuctionButtonOnAction, aboutButtonOnAction, contactButtonOnAction, loginButtonOnAction, registerButtonOnAction }: FooterProps) => {
+const Footer = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction, myAuctionButtonOnAction, aboutButtonOnAction, contactButtonOnAction}: FooterProps) => {
+
+    const [loginVisibility, setLoginVisibility] = useState(false)
+    const [registerVisibility, setRegisterVisibility] = useState(false)
+
+    function loginButtonOnAction() {
+        setLoginVisibility(true);
+    }
+    function closeLoginModal() {
+        setLoginVisibility(false);
+    }
+    function handleLoginOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
+        // Close the modal if the click is on the overlay, not inside the modal content
+        if (e.target === e.currentTarget) {
+            closeLoginModal();
+        }
+    }
+
+    function registerButtonOnAction() {
+        setRegisterVisibility(true);
+    }
+    function closeRegisterModal() {
+        setRegisterVisibility(false);
+    }
+    function handleRegisterOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
+        // Close the modal if the click is on the overlay, not inside the modal content
+        if (e.target === e.currentTarget) {
+            closeRegisterModal();
+        }
+    }
 
     return (
         <div className='grid grid-cols-4 w-full bg-gray-800 p-10'>
@@ -41,8 +71,26 @@ const Footer = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
                     <br />
                     <li><button onClick={aboutButtonOnAction}>About</button></li>
                     <li><button onClick={contactButtonOnAction}>Contact</button></li>
-
                 </ul>
+
+                {/* body */}
+            {loginVisibility && (
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    onClick={handleLoginOverlayClick}
+                >
+                    <LoginModal />
+                </div>
+            )}
+
+            {registerVisibility && (
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    onClick={handleRegisterOverlayClick}
+                >
+                    <RegistrationModal />
+                </div>
+            )}
 
             </div>
         </div>
