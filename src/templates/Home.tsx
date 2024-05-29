@@ -11,7 +11,7 @@ import img5 from "../assets/home/audi-homepage.png"
 const Home = () => {
     return (
         <div>
-            <Carousel className="rounded-xl">
+            <Carousel>
                 <img
                     src={img1}
                     alt="image 1"
@@ -29,6 +29,11 @@ const Home = () => {
                 />
                 <img
                     src={img4}
+                    alt="image 4"
+                    className="h-full w-full object-cover"
+                />
+                <img
+                    src={img5}
                     alt="image 4"
                     className="h-full w-full object-cover"
                 />

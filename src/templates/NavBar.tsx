@@ -46,7 +46,7 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
     return (
         <div>
             {/* hedder */}
-            <nav className="bg-gray-800 text-white p-4">
+            <nav className="bg-gray-800 text-white p-4 fixed top-0 left-0 right-0 z-50">
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="size-20"><img src={logo} alt="" /></div>
                     <div className="text-[40px] font-bold">Auto Bidder</div>

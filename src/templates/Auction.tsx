@@ -1,6 +1,12 @@
+import AuctionHedder from "../organisms/auction/AuctionHedder"
+import AuctionList from "../organisms/auction/AuctionList"
+
 const Auction = () => {
   return (
-    <div>Auction</div>
+    <div className="px-10 mb-10">
+      <AuctionHedder/>
+      <AuctionList/>
+    </div>
   )
 }
 
