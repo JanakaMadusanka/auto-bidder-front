@@ -10,18 +10,21 @@ import MyAuction from './templates/MyAuction'
 
 const App = () => {
 
-  const [component,setComponnent] = useState (<Home/>)
-  
+  const [component, setComponent] = useState(<Home />)
+
   return (
     <div>
-      <NavBar 
-      homeButtonOnAction={()=>setComponnent(<Home/>)} 
-      auctionButtonOnAction={()=>setComponnent(<Auction/>)}
-      sellButtonOnAction={()=>setComponnent(<Sell/>)} 
-      myAuctionButtonOnAction={()=>setComponnent(<MyAuction/>)} 
-      aboutButtonOnAction={()=>setComponnent(<About/>)} 
-      contactButtonOnAction={()=>setComponnent(<Contact/>)} />
-      {component}
+      <NavBar
+        homeButtonOnAction={() => setComponent(<Home />)}
+        auctionButtonOnAction={() => setComponent(<Auction />)}
+        sellButtonOnAction={() => setComponent(<Sell />)}
+        myAuctionButtonOnAction={() => setComponent(<MyAuction />)}
+        aboutButtonOnAction={() => setComponent(<About />)}
+        contactButtonOnAction={() => setComponent(<Contact />)}
+      />
+      <div className="pt-28"> {/* Add padding to the top to prevent content from being covered by the fixed NavBar */}
+        {component}
+      </div>
     </div>
   )
 }
