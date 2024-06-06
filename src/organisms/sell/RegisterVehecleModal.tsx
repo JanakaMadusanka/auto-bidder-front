@@ -2,6 +2,7 @@ import ButtonType01 from "../../atoms/common/ButtonType01"
 import InputFieldType01 from "../../atoms/common/InputFieldType01"
 import image from '../../assets/home/carosul2.png'
 import SelectFieldType01 from "../../atoms/common/SelectFieldType01"
+import InputFileField from "../../molecules/sell/InputFileField"
 
 const RegisterVehecleModal = () => {
 
@@ -25,18 +26,21 @@ const RegisterVehecleModal = () => {
             <InputFieldType01 title='Milage (km)' inputSize="h-9" classNames="mt-4" />
             <InputFieldType01 title='Vehicle Registration Number' inputSize="h-9" classNames="mt-4" />
           </div>
+
+
           <div className="col-span-1 text-sm text-gray-600 p-5">
-            <div className="grid grid-rows-2 font-semibold">
-              <p>Add main image</p>
-              <div className="row-span-1">
+            <div className="grid grid-rows-2 gap-6 font-semibold">
+              <div className="row-span-1 border-2">
+                <InputFileField title='Add main image' />
                 <img src={image} alt="" />
               </div>
-              <p>Add additional images</p>
-              <div className="row-span-1">
+              <div className="row-span-1 ">
+                <InputFileField title='Add additional images' />
                 <img src={image} alt="" />
               </div>
             </div>
           </div>
+
         </div>
         <div className="flex justify-center">
           <ButtonType01 title='Register' buttonSize="h-12 w-full" />

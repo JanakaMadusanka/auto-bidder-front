@@ -1,8 +1,8 @@
 interface CheckBoxType01Props {
     label?: string;
-    checked?: boolean;
-    onChange?: () => void;
     classes?:string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    checked?:boolean;
 }
 
 const CheckBoxType01 = ({ label,checked,onChange,classes }: CheckBoxType01Props) => {

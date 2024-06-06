@@ -5,8 +5,11 @@ interface props {
     title: string;
     classNames?: string;
     inputSize?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value?: string;
+    name: string;
 }
-const InputFieldTypePassword = ({ title, classNames, inputSize }: props) => {
+const InputFieldTypePassword = ({ title, classNames, inputSize, onChange, value, name }: props) => {
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -20,9 +23,11 @@ const InputFieldTypePassword = ({ title, classNames, inputSize }: props) => {
             <div className="relative">
                 <input
                     type={passwordVisible ? 'text' : 'password'}
-                    name=""
                     id=""
                     className={`mt-1 w-full pl-3 pr-10 rounded-lg border-1 border-gray-400 items-center h-12 bg-gray-200 text-gray-800 ${inputSize}`}
+                    onChange={onChange}
+                    value={value}
+                    name={name}
                 />
                 <button
                     type="button"

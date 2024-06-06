@@ -2,7 +2,7 @@ import cardImage from "../../assets/home/carosul1.png"
 
 function AuctionCard() {
     return (
-        <div className='w-auto p-2 m-2 rounded-2xl bg-gray-50 border border-gray-300 shadow-lg transition-transform duration-300 hover:scale-110 hover:shadow-2xl'>
+        <div className='w-auto p-2 m-2 rounded-2xl bg-gray-50 border border-gray-300 shadow-lg transition-transform duration-300 hover:scale-125 hover:shadow-2xl'>
 
             <div className="h-45">
                 <img

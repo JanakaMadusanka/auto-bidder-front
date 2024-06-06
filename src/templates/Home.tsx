@@ -32,11 +32,6 @@ const Home = () => {
                     alt="image 4"
                     className="h-full w-full object-cover"
                 />
-                <img
-                    src={img5}
-                    alt="image 4"
-                    className="h-full w-full object-cover"
-                />
             </Carousel>
             {/* <div className="absolute">
                 <p className="text-4xl">Online Auto Auction for User Vehicle in Sri Lanka</p>
