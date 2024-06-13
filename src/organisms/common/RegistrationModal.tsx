@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 
 const RegistrationModal = () => {
 
+  // Reed input data
   const [formData, setFormData] = useState(
     {
       firstName: '',
@@ -29,6 +30,7 @@ const RegistrationModal = () => {
     }));
   };
 
+  //  Set seller User Role 
   const handleSellerChecked = () => {
     setIsSellerChecked(!isSellerChecked);
     setFormData((prevFormData) => {
@@ -48,6 +50,7 @@ const RegistrationModal = () => {
     });
   };
 
+  //  Set buyer User Role
   const handleBuyerChecked = () => {
     setIsBuyerChecked(!isBuyerChecked);
     setFormData((prevFormData) => {
@@ -68,34 +71,49 @@ const RegistrationModal = () => {
   };
 
   const handleSubmit = () => {
-    // Exclude confirmPassword from the payload
-    if (formData.confirmPassword === formData.password) {
-      const { confirmPassword, ...payload } = formData;
+    // Check for empty required fields
+    const { firstName, lastName, mobile, email, password, confirmPassword, userRole } = formData;
 
-      console.log("Form Data:", payload); // Log the form data
+    if (!firstName || !lastName || !mobile || !email || !password || !confirmPassword || userRole.length === 0) {
+      alert("Please fill out all required fields and select at least one role.");
+      return;
+    }
+    // Check for confirm password
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
-      fetch('http://localhost:8081/user/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+    const { confirmPassword: confirmPwd, ...payload } = formData; // Exclude confirmPassword from the payload
+
+    console.log("Form Data:", payload); // Log the form 
+
+    // Show loading indicator
+    Swal.fire({
+      title: "Registering...",
+      text: "Please wait",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    fetch('http://localhost:8081/user/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Success:', data);
-          // Handle successful registration (e.g., show a success message, redirect, etc.)
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          // Handle errors (e.g., show an error message)
-        });
-
+      .then(data => {
+        console.log('Success:', data);
+        Swal.close(); // Close loading indicator
+        // show success message
         Swal.fire({
           position: "center",
           icon: "success",
@@ -103,10 +121,17 @@ const RegistrationModal = () => {
           showConfirmButton: false,
           timer: 2500
         });
-
-    } else {
-      alert("Password Doesnot match")
-    }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        Swal.close(); // Close loading indicator
+        // show error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: error.message || 'An error occurred during registration. Please try again later.',
+        });
+      });
   };
 
   return (
