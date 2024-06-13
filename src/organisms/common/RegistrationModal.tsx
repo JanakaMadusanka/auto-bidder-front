@@ -106,21 +106,33 @@ const RegistrationModal = () => {
       body: JSON.stringify(payload),
     })
       .then(response => {
+        return response.json()
         if (!response.ok) {
           throw new Error('Network response was not ok ' + response.statusText);
         }
       })
       .then(data => {
         console.log('Success:', data);
-        Swal.close(); // Close loading indicator
-        // show success message
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "You are successfully Registered",
-          showConfirmButton: false,
-          timer: 2500
-        });
+        if (data) {
+          Swal.close(); // Close loading indicator
+          // duplicate user message
+          Swal.fire({
+            icon: 'error',
+            title: 'User Allready Exist',
+            text: 'Please try again using differant e-mail',
+          });
+
+        } else {
+          Swal.close(); // Close loading indicator
+          // show success message
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "You are successfully Registered",
+            showConfirmButton: false,
+            timer: 2500
+          });
+        }
       })
       .catch((error) => {
         console.error('Error:', error);
