@@ -21,6 +21,7 @@ const RegistrationModal = () => {
 
   const [isSellerChecked, setIsSellerChecked] = useState(false)
   const [isBuyerChecked, setIsBuyerChecked] = useState(false)
+  const [isValidEmail, setIsValidEmail] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,12 +71,27 @@ const RegistrationModal = () => {
     });
   };
 
+  //Check for email valication
+  const handleBlur = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //Regex for email
+    const isValidEmails = emailRegex.test(formData.email);// Validate emails
+    if (isValidEmails) {
+      setIsValidEmail(true);
+    } else {
+      setIsValidEmail(false);
+    }
+  }
+
   const handleSubmit = () => {
     // Check for empty required fields
     const { firstName, lastName, mobile, email, password, confirmPassword, userRole } = formData;
 
     if (!firstName || !lastName || !mobile || !email || !password || !confirmPassword || userRole.length === 0) {
-      alert("Please fill out all required fields and select at least one role.");
+      Swal.fire({
+        icon: 'error',
+        title: '',
+        text: 'Please fill out all required fields and select at least one role.',
+      });
       return;
     }
     // Check for confirm password
@@ -156,7 +172,12 @@ const RegistrationModal = () => {
           <InputFieldType01 title='First Name' classNames="mt-3" inputSize="h-9" onChange={handleChange} value={formData.firstName} name="firstName" />
           <InputFieldType01 title='Last Name' classNames="mt-3" inputSize="h-9" onChange={handleChange} value={formData.lastName} name="lastName" />
           <InputFieldType01 title='Mobile Number' classNames="mt-4" inputSize="h-9" onChange={handleChange} value={formData.mobile} name="mobile" />
-          <InputFieldType01 title='e-mail' classNames="mt-3" inputSize="h-9" onChange={handleChange} value={formData.email} name="email" />
+          <InputFieldType01 title='e-mail' classNames="mt-3" inputSize="h-9" onChange={handleChange} onBlur={handleBlur} value={formData.email} name="email" />
+          {/* alert for invalid email */}
+          {!isValidEmail &&
+            <label className="text-red-600" htmlFor="">
+              Please Enter Valid e-mail address
+            </label>}
           <InputFieldTypePassword title='Password' classNames="mt-3" inputSize="h-9" onChange={handleChange} value={formData.password} name="password" />
           <InputFieldTypePassword title='Confirm Password' classNames="mt-3" inputSize="h-9" onChange={handleChange} value={formData.confirmPassword} name="confirmPassword" />
           <div className="mt-3">

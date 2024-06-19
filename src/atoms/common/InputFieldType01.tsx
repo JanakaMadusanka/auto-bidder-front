@@ -1,4 +1,4 @@
-interface PasswordFieldProps {
+interface InputFieldType01Props {
     title: string;
     inputType?: string;
     classNames?: string;
@@ -8,7 +8,7 @@ interface PasswordFieldProps {
     value?: string;
     name: string;
 }
-const InputFieldType01 = ({ title, inputType, classNames, inputSize, onChange, onBlur, value, name }: PasswordFieldProps) => {
+const InputFieldType01 = ({ title, inputType, classNames, inputSize, onChange, onBlur, value, name }: InputFieldType01Props) => {
 
 
     return (
