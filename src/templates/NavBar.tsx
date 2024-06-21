@@ -2,23 +2,38 @@ import React, { useState } from 'react';
 import logo from '../assets/common/Logo2.png'
 import LoginModal from '../organisms/common/LoginModal';
 import RegistrationModal from '../organisms/common/RegistrationModal';
+import { button } from '@material-tailwind/react';
+import Swal from "sweetalert2";
 
 interface NavBarProps {
-    homeButtonOnAction?:()=>void;
-    auctionButtonOnAction?:()=>void;
-    sellButtonOnAction?:()=>void;
-    myAuctionButtonOnAction?:()=>void;
-    aboutButtonOnAction?:()=>void;
-    contactButtonOnAction?:()=>void;
+    homeButtonOnAction?: () => void;
+    auctionButtonOnAction?: () => void;
+    sellButtonOnAction?: () => void;
+    myAuctionButtonOnAction?: () => void;
+    aboutButtonOnAction?: () => void;
+    contactButtonOnAction?: () => void;
 }
 
 const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction, myAuctionButtonOnAction, aboutButtonOnAction, contactButtonOnAction }: NavBarProps) => {
 
-    const [loginVisibility, setLoginVisibility] = useState(false)
-    const [registerVisibility, setRegisterVisibility] = useState(false)
+    const [loginVisibility, setLoginVisibility] = useState(false) //State for login Modal
+    const [registerVisibility, setRegisterVisibility] = useState(false) //State for register Modal
+    const [isLogged, setIsLogged] = useState(false);
+
+
 
     function loginButtonOnAction() {
         setLoginVisibility(true);
+    }
+    function logoutButtonOnAction() {
+        setIsLogged(false);
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "You are Logged oute",
+            showConfirmButton: false,
+            timer: 2500
+        });
     }
     function closeLoginModal() {
         setLoginVisibility(false);
@@ -42,6 +57,7 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
             closeRegisterModal();
         }
     }
+
     // set navitation
     return (
         <div>
@@ -59,7 +75,12 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
                         <button onClick={contactButtonOnAction} className="hover:text-gray-400">Contact</button>
                     </div>
                     <div>
-                        <button onClick={loginButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Login</button>
+                        {!isLogged &&
+                            <button onClick={loginButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Login</button>
+                        }
+                        {isLogged && 
+                            <button onClick={logoutButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Logout</button>
+                        }
                         <button onClick={registerButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Register</button>
                     </div>
                 </div>
@@ -71,7 +92,7 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
                     className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                     onClick={handleLoginOverlayClick}
                 >
-                    <LoginModal />
+                    <LoginModal setIsLogged={setIsLogged} />
                 </div>
             )}
 

@@ -5,7 +5,11 @@ import InputFieldType01 from "../../atoms/common/InputFieldType01";
 import InputFieldTypePassword from "../../atoms/common/InputFieldTypePassword";
 import Swal from "sweetalert2";
 
-const LoginModal = () => {
+interface LoginModalProps {
+  setIsLogged: (value:boolean)=>void;
+}
+
+const LoginModal = ({ setIsLogged}: LoginModalProps) => {
 
   const [loginData, setLoginData] = useState({
     "email": "",
@@ -59,6 +63,7 @@ const LoginModal = () => {
               showConfirmButton: false,
               timer: 2500
             });
+            setIsLogged(true);
           } else {
             setIsMatch(false);
           }
@@ -66,6 +71,7 @@ const LoginModal = () => {
         .catch((error) => console.error(error));
     }
   }
+
 
   return (
     <div>
