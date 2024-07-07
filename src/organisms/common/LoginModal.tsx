@@ -7,9 +7,10 @@ import Swal from "sweetalert2";
 
 interface LoginModalProps {
   setIsLogged: (value:boolean)=>void;
+  setLoggedUser: (value:string)=>void;
 }
 
-const LoginModal = ({ setIsLogged}: LoginModalProps) => {
+const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
 
   const [loginData, setLoginData] = useState({
     "email": "",
@@ -64,6 +65,7 @@ const LoginModal = ({ setIsLogged}: LoginModalProps) => {
               timer: 2500
             });
             setIsLogged(true);
+            setLoggedUser(loginData.email);
           } else {
             setIsMatch(false);
           }

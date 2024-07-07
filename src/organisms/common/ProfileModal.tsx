@@ -1,0 +1,76 @@
+import { useEffect, useState } from "react";
+import ButtonType01 from "../../atoms/common/ButtonType01";
+import InputFieldType01 from "../../atoms/common/InputFieldType01";
+
+interface ProfileModalProps {
+  loggedUser: string;
+}
+
+const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
+
+  const [profile, setProfile] = useState({
+    firstName: "",
+    lastName: "",
+    mobile: "",
+    // role: ""
+  });
+
+  useEffect(() => {
+
+    // fetch data to get Profile details from server
+
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow"
+    };
+
+    fetch(`http://localhost:8081/user/search-by-email/${loggedUser}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        setProfile({
+          firstName: result.firstName,
+          lastName: result.lastName,
+          mobile: result.mobile,
+          // role: result.role
+        });
+      })
+      .catch((error) => console.error(error));
+
+  }, [loggedUser])
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target;
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      [name]: value
+    }));
+  }
+
+  function handleEditProfile() {
+
+  }
+
+  return (
+    <div>
+      <div className='w-[500px] tablet-or-mobile:w-[360px] bg-white border-2 border-blue-gray-600 shadow-2xl p-8 rounded-3xl'>
+        <div className="flex justify-center h">
+          <p className="text-gray-800 text-2xl font-semibold">User Profile</p>
+        </div>
+        <p className="flex justify-center text-gray-800 font-semibold">({loggedUser})</p>
+        <div className="text-sm text-gray-600">
+          <InputFieldType01 title='First Name' classNames="mt-3" inputSize="h-9" value={profile.firstName} onChange={handleChange} name="firstName" readOnly={true}/>
+          <InputFieldType01 title='Last Name' classNames="mt-3" inputSize="h-9" value={profile.lastName} onChange={handleChange} name="lastName" readOnly={true}/>
+          <InputFieldType01 title='Mobile Number' classNames="mt-4" inputSize="h-9" value={profile.mobile} onChange={handleChange} name="mobile" readOnly={true}/>
+          {/* <InputFieldType01 title='Role' classNames="mt-3" inputSize="h-9" value="sellerf" onChange={handleChange} name="role" /> */}
+
+          <div className="flex justify-center w-full mt-3">
+            <ButtonType01 title='EditProfile' buttonSize="h-10 w-full" click={handleEditProfile} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default ProfileModal

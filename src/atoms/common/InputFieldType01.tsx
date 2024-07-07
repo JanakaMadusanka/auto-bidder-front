@@ -7,8 +7,9 @@ interface InputFieldType01Props {
     onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     value?: string;
     name: string;
+    readOnly?:boolean;
 }
-const InputFieldType01 = ({ title, inputType, classNames, inputSize, onChange, onBlur, value, name }: InputFieldType01Props) => {
+const InputFieldType01 = ({ title, inputType, classNames, inputSize, onChange, onBlur, value, name,readOnly }: InputFieldType01Props) => {
 
 
     return (
@@ -21,6 +22,7 @@ const InputFieldType01 = ({ title, inputType, classNames, inputSize, onChange, o
                 name={name}
                 className={`mt-1 w-full px-3 rounded-lg border-1 border-gray-400 items-center h-12 bg-gray-200 text-gray-800 ${inputSize}`}
                 type={inputType}
+                readOnly={readOnly}
                 id=""
             />
         </div>

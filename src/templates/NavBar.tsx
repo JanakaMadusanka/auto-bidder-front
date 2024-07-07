@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import logo from '../assets/common/Logo2.png'
 import LoginModal from '../organisms/common/LoginModal';
 import RegistrationModal from '../organisms/common/RegistrationModal';
-import { button } from '@material-tailwind/react';
 import Swal from "sweetalert2";
+import ProfileModal from '../organisms/common/ProfileModal';
 
 interface NavBarProps {
     homeButtonOnAction?: () => void;
@@ -17,23 +17,14 @@ interface NavBarProps {
 const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction, myAuctionButtonOnAction, aboutButtonOnAction, contactButtonOnAction }: NavBarProps) => {
 
     const [loginVisibility, setLoginVisibility] = useState(false) //State for login Modal
-    const [registerVisibility, setRegisterVisibility] = useState(false) //State for register Modal
     const [isLogged, setIsLogged] = useState(false);
-
-
+    const [registerVisibility, setRegisterVisibility] = useState(false) //State for register Modal
+    const [profileVisibility, setProfileVisibility] = useState(false) //State for profile Modal
+    const [loggedUser, setLoggedUser] = useState("loged user"); //State to keep Logging email
+    
 
     function loginButtonOnAction() {
         setLoginVisibility(true);
-    }
-    function logoutButtonOnAction() {
-        setIsLogged(false);
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "You are Logged oute",
-            showConfirmButton: false,
-            timer: 2500
-        });
     }
     function closeLoginModal() {
         setLoginVisibility(false);
@@ -43,6 +34,18 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
         if (e.target === e.currentTarget) {
             closeLoginModal();
         }
+    }
+
+    function logoutButtonOnAction() {
+        setIsLogged(false);
+        setLoggedUser("logged user")
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "You are Logged oute",
+            showConfirmButton: false,
+            timer: 2500
+        });
     }
 
     function registerButtonOnAction() {
@@ -57,6 +60,21 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
             closeRegisterModal();
         }
     }
+
+    function profileButtonOnAction() {
+        setProfileVisibility(true);
+    }
+    function closeProfileModal() {
+        setProfileVisibility(false);
+    }
+    function handleProfileOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
+        // Close the modal if the click is on the overlay, not inside the modal content
+        if (e.target === e.currentTarget) {
+            closeProfileModal();
+        }
+    }
+
+
 
     // set navitation
     return (
@@ -78,10 +96,15 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
                         {!isLogged &&
                             <button onClick={loginButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Login</button>
                         }
-                        {isLogged && 
+                        {isLogged &&
                             <button onClick={logoutButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Logout</button>
                         }
-                        <button onClick={registerButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Register</button>
+                        {!isLogged &&
+                            <button onClick={registerButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Register</button>
+                        }
+                        {isLogged &&
+                            <button onClick={profileButtonOnAction} className='border-2 border-white py-2 px-4 ml-4 rounded-lg hover:text-gray-400'>Profile</button>
+                        }
                     </div>
                 </div>
             </nav>
@@ -92,7 +115,7 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
                     className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                     onClick={handleLoginOverlayClick}
                 >
-                    <LoginModal setIsLogged={setIsLogged} />
+                    <LoginModal setIsLogged={setIsLogged} setLoggedUser={setLoggedUser}/>
                 </div>
             )}
 
@@ -102,6 +125,14 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
                     onClick={handleRegisterOverlayClick}
                 >
                     <RegistrationModal />
+                </div>
+            )}
+            {profileVisibility && (
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    onClick={handleProfileOverlayClick}
+                >
+                    <ProfileModal loggedUser={loggedUser} />
                 </div>
             )}
         </div>
