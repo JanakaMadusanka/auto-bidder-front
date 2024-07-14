@@ -12,7 +12,7 @@ const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
     firstName: "",
     lastName: "",
     mobile: "",
-    // role: ""
+    userRole: new Set<Short>(),
   });
 
   useEffect(() => {
@@ -28,11 +28,12 @@ const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
+        const userRoleSet = new Set(result.userRole);
         setProfile({
           firstName: result.firstName,
           lastName: result.lastName,
           mobile: result.mobile,
-          // role: result.role
+          userRole: userRoleSet,
         });
       })
       .catch((error) => console.error(error));
@@ -61,8 +62,15 @@ const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
         <div className="text-sm text-gray-600">
           <InputFieldType01 title='First Name' classNames="mt-3" inputSize="h-9" value={profile.firstName} onChange={handleChange} name="firstName" readOnly={true}/>
           <InputFieldType01 title='Last Name' classNames="mt-3" inputSize="h-9" value={profile.lastName} onChange={handleChange} name="lastName" readOnly={true}/>
-          <InputFieldType01 title='Mobile Number' classNames="mt-4" inputSize="h-9" value={profile.mobile} onChange={handleChange} name="mobile" readOnly={true}/>
-          {/* <InputFieldType01 title='Role' classNames="mt-3" inputSize="h-9" value="sellerf" onChange={handleChange} name="role" /> */}
+          <InputFieldType01 title='Mobile Number' classNames="mt-3" inputSize="h-9" value={profile.mobile} onChange={handleChange} name="mobile" readOnly={true}/>
+          <div className="mt-3">
+            <p className="font-semibold">User Roles:</p>
+            <ul className="ml-3">
+              {Array.from(profile.userRole).map((roleId) => (
+                <li key={roleId}>{roleId}</li>
+              ))}
+            </ul>
+          </div>
 
           <div className="flex justify-center w-full mt-3">
             <ButtonType01 title='EditProfile' buttonSize="h-10 w-full" click={handleEditProfile} />
