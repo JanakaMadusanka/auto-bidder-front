@@ -1,14 +1,21 @@
 import ButtonType01 from "../../atoms/common/ButtonType01"
 import InputFieldType01 from "../../atoms/common/InputFieldType01"
 import SelectFieldType01 from "../../atoms/common/SelectFieldType01"
+import SelectFieldType02 from "../../atoms/common/SelectFieldType02"
 import InputFileField from "../../molecules/sell/InputFileField"
 import { useEffect, useState } from "react"
 import Swal from "sweetalert2"
 import image from "../../assets/home/audi-homepage.png"
 
+type Short = number;
+interface CategoryOption {
+  id: Short;
+  name: string;
+}
+
 const RegisterVehicleModal = () => {
 
-  const [categoryOptions, setCategoryOptions] = useState<string[]>(['Select']);
+  const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([{ id: -1, name: 'Select' }]);
   const makeOptions = ['Select', 'Toyota', 'Honda', 'Nisan', 'BMW', 'Benz', 'Maruthi', 'Tata', 'Laylend', 'Other']
   const [yearOptions, setYearOptions] = useState<string[]>([]);
 
@@ -25,17 +32,17 @@ const RegisterVehicleModal = () => {
     fetch("http://localhost:8082/category/get/all", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        const categories = result.map((item: any) => item.category);
-        setCategoryOptions(['Select', ...categories]);
-        console.log(result);
+        const categories = result.map((item: any) => ({
+          id: item.id,         // categoryId
+          name: item.category  // category name
+        }));
+        setCategoryOptions([{ id: -1, name: 'Select' }, ...categories]); // Prepend 'Select' to the array
       })
       .catch((error) => console.error(error));
-
   }
 
   useEffect(() => {
     fetchCategoryOptions();  // Fetch categories when component mounts
-
 
     const currentYear = new Date().getFullYear(); // get current year
     const startYear = 2000; // Define starting year
@@ -50,22 +57,22 @@ const RegisterVehicleModal = () => {
 
   const [formData, setFormData] = useState(
     {
-      ownerId: '',
-      category: '',
+      ownerId: 0,
+      categoryId: 0,
       make: '',
       year: '',
       model: '',
       color: '',
-      milage: '',
+      mileage: '',
       regNo: '',
-      mainImage: imagePreviews.mainImage as string | File,
+      //mainImage: imagePreviews.mainImage as string | File,
     });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [name]: name === 'ownerId' || name === 'categoryId' ? Number(value) : value,
     }));
   };
 
@@ -82,16 +89,15 @@ const RegisterVehicleModal = () => {
       reader.readAsDataURL(file); // Read the file as a data URL for preview purposes
 
       // Update formData with the actual file for form submission
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        mainImage: file, // Save the actual file for submission
-      }));
+      // setFormData((prevFormData) => ({
+      //   ...prevFormData,
+      //   mainImage: file, // Save the actual file for submission
+      // }));
     }
   };
 
   const handleSubmit = () => {
-
-    if (!formData.category || !formData.make || !formData.year || !formData.model || !formData.color || !formData.milage || !formData.regNo) {
+    if (!formData.categoryId || !formData.make || !formData.year || !formData.model || !formData.color || !formData.mileage || !formData.regNo) {
       Swal.fire({
         icon: 'warning',
         title: 'Incomplete Data',
@@ -99,7 +105,8 @@ const RegisterVehicleModal = () => {
       });
       return;
     }
-    if (formData.category === 'Select' || formData.make === 'Select' || formData.year === 'Select') {
+    
+    if (formData.categoryId === 0 || formData.make === 'Select' || formData.year === 'Select') {
       Swal.fire({
         icon: 'warning',
         title: 'Invalid Selection',
@@ -107,50 +114,35 @@ const RegisterVehicleModal = () => {
       });
       return;
     }
-    console.log(formData);
-
-    // form submission
-
-
-    const formDataToSend = new FormData();
-
-    // Assert that key is of type keyof typeof formData
-    (Object.keys(formData) as (keyof typeof formData)[]).forEach((key) => {
-      formDataToSend.append(key, formData[key]);
-    });
-
-    fetch('http://localhost:8081/vehicle/register', {
+  
+    // Send form data as JSON
+    fetch('http://localhost:8082/vehicle/register', {
       method: 'POST',
-      body: formDataToSend,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData), // Send as JSON
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
+        if (response.status === 201) { // 201 Created, success
+          return response.text(); // Get response text (message from backend)
+        } else if (response.status === 409) { // 409 Conflict, vehicle already exists
+          throw new Error('Vehicle already registered.');
+        } else if (!response.ok) { // Other errors
+          throw new Error('Something went wrong.');
         }
-        return response.json();
+        return response.text(); // Handle other success cases
       })
-      .then(data => {
-        console.log(data); // Logs the response data in the console
-        Swal.close();
-        if (data.success) {
-          console.log(data);
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Your vehicle is successfully registered",
-            showConfirmButton: false,
-            timer: 2500
-          });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Vehicle Already Registered',
-            text: 'Please register a different vehicle',
-          });
-        }
+      .then(message => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: message || "Your vehicle is successfully registered",
+          showConfirmButton: false,
+          timer: 2500
+        });
       })
       .catch((error) => {
-        Swal.close();
         Swal.fire({
           icon: 'error',
           title: 'Registration Failed',
@@ -158,6 +150,7 @@ const RegisterVehicleModal = () => {
         });
       });
   };
+  
 
   return (
     <div>
@@ -167,12 +160,19 @@ const RegisterVehicleModal = () => {
         </div>
         <div className="grid grid-cols-2">
           <div className="col-span-1 text-sm text-gray-600 p-5">
-            <SelectFieldType01 title='Category' options={categoryOptions} onChange={handleChange} value={formData.category} name="category" />
+
+            <SelectFieldType02
+              title='Category'
+              options={categoryOptions.map(option => ({ value: option.id, label: option.name }))} // Keep value as number
+              onChange={handleChange}
+              value={formData.categoryId} // Ensure this is a number
+              name="categoryId"
+            />
             <SelectFieldType01 title='Make' options={makeOptions} classNames="mt-4" onChange={handleChange} value={formData.make} name="make" />
             <SelectFieldType01 title='Year' options={yearOptions} classNames="mt-4" onChange={handleChange} value={formData.year} name="year" />
             <InputFieldType01 title='Model' inputSize="h-9" classNames="mt-4" onChange={handleChange} value={formData.model} name="model" />
             <InputFieldType01 title='Color' inputSize="h-9" classNames="mt-4" onChange={handleChange} value={formData.color} name="color" />
-            <InputFieldType01 title='Milage (km)' inputSize="h-9" classNames="mt-4" onChange={handleChange} value={formData.milage} name="milage" />
+            <InputFieldType01 title='Mileage (km)' inputSize="h-9" classNames="mt-4" onChange={handleChange} value={formData.mileage} name="mileage" />
             <InputFieldType01 title='Vehicle Registration Number' inputSize="h-9" classNames="mt-4" onChange={handleChange} value={formData.regNo} name="regNo" />
           </div>
           <div className="col-span-1 text-sm text-gray-600 p-5">
