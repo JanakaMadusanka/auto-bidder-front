@@ -5,7 +5,6 @@ import SelectFieldType02 from "../../atoms/common/SelectFieldType02"
 import InputFileField from "../../molecules/sell/InputFileField"
 import { useEffect, useState } from "react"
 import Swal from "sweetalert2"
-import image from "../../assets/home/audi-homepage.png"
 
 type Short = number;
 interface CategoryOption {
@@ -22,7 +21,6 @@ const RegisterVehicleModal = () => {
   const fetchCategoryOptions = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
     const requestOptions = {
       method: "GET",
       headers: myHeaders,
@@ -46,14 +44,9 @@ const RegisterVehicleModal = () => {
 
     const currentYear = new Date().getFullYear(); // get current year
     const startYear = 2000; // Define starting year
-
     const years = Array.from({ length: currentYear - startYear + 1 }, (_, index) => (startYear + index).toString());
     setYearOptions(['Select', ...years]); // Prepend 'Select' to the array
   }, []);
-
-  const [imagePreviews, setImagePreviews] = useState({
-    mainImage: image,
-  });
 
   const [formData, setFormData] = useState(
     {
@@ -65,7 +58,8 @@ const RegisterVehicleModal = () => {
       color: '',
       mileage: '',
       regNo: '',
-      //mainImage: imagePreviews.mainImage as string | File,
+      mainImageUrl: '', // Store the main image URL
+      additionalImageUrls: [] as string[], // Store additional image URLs
     });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -76,27 +70,22 @@ const RegisterVehicleModal = () => {
     }));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]; // Get the first file from the input
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImagePreviews((prevPreviews) => ({
-          ...prevPreviews,
-          mainImage: reader.result as string, // Update image preview with base64 string
-        }));
-      };
-      reader.readAsDataURL(file); // Read the file as a data URL for preview purposes
+  const handleMainImageUpload = (images: string[]) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      mainImageUrl: images[0], // Replace the main image
+    }));
+  };
 
-      // Update formData with the actual file for form submission
-      // setFormData((prevFormData) => ({
-      //   ...prevFormData,
-      //   mainImage: file, // Save the actual file for submission
-      // }));
-    }
+  const handleAdditionalImagesUpload = (images: string[]) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      additionalImageUrls: [...prevFormData.additionalImageUrls, ...images], // Append additional images
+    }));
   };
 
   const handleSubmit = () => {
+
     if (!formData.categoryId || !formData.make || !formData.year || !formData.model || !formData.color || !formData.mileage || !formData.regNo) {
       Swal.fire({
         icon: 'warning',
@@ -105,7 +94,7 @@ const RegisterVehicleModal = () => {
       });
       return;
     }
-    
+
     if (formData.categoryId === 0 || formData.make === 'Select' || formData.year === 'Select') {
       Swal.fire({
         icon: 'warning',
@@ -114,7 +103,7 @@ const RegisterVehicleModal = () => {
       });
       return;
     }
-  
+
     // Send form data as JSON
     fetch('http://localhost:8082/vehicle/register', {
       method: 'POST',
@@ -150,7 +139,6 @@ const RegisterVehicleModal = () => {
         });
       });
   };
-  
 
   return (
     <div>
@@ -177,9 +165,24 @@ const RegisterVehicleModal = () => {
           </div>
           <div className="col-span-1 text-sm text-gray-600 p-5">
             <div className="grid gap-6 font-semibold">
+
               <div className=" border-2 p-2 h-fit">
-                <InputFileField title='Add main image' uploadFile={handleFileUpload} name="mainImage" />
-                {imagePreviews.mainImage && <img src={imagePreviews.mainImage} alt="Main Vehicle" className="mt-2 max-w-full h-auto" />}
+                <InputFileField
+                  title="Add main image"
+                  classNames="mt-4"
+                  setImages={handleMainImageUpload}
+                  singleFileUpload={true} // Single file upload for main image
+                />
+              </div>
+
+              <div className="border-2 p-2 h-fit mt-4">
+                <InputFileField
+                  title="Add additional images"
+                  classNames="mt-4"
+                  setImages={handleAdditionalImagesUpload}
+                />
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                </div>
               </div>
             </div>
           </div>
