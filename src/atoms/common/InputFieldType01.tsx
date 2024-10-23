@@ -13,7 +13,7 @@ const InputFieldType01 = ({ title, inputType, classNames, inputSize, onChange, o
 
 
     return (
-        <div className={`place-items-center w-full ${classNames}`}>
+        <div className={` w-full ${classNames}`}>
             <div className="font-semibold"><p >{`${title} :`}</p></div >
             <input
                 onChange={onChange}
