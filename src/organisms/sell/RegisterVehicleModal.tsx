@@ -1,159 +1,199 @@
-import ButtonType01 from "../../atoms/common/ButtonType01"
-import InputFieldType01 from "../../atoms/common/InputFieldType01"
-import SelectFieldType01 from "../../atoms/common/SelectFieldType01"
-import SelectFieldType02 from "../../atoms/common/SelectFieldType02"
-import InputFileField from "../../molecules/sell/InputFileField"
-import { useEffect, useState } from "react"
-import Swal from "sweetalert2"
+import ButtonType01 from "../../atoms/common/ButtonType01";
+import InputFieldType01 from "../../atoms/common/InputFieldType01";
+import SelectFieldType01 from "../../atoms/common/SelectFieldType01";
+import SelectFieldType02 from "../../atoms/common/SelectFieldType02";
+import InputFileField from "../../molecules/sell/InputFileField";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
-type Short = number;
 interface CategoryOption {
-  id: Short;
+  id: number;
   name: string;
 }
 
 const RegisterVehicleModal = () => {
 
-  const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([{ id: -1, name: 'Select' }]);
-  const makeOptions = ['Select', 'Toyota', 'Honda', 'Nisan', 'BMW', 'Benz', 'Maruthi', 'Tata', 'Laylend', 'Other']
+  const makeOptions = ['Select', 'Toyota', 'Honda', 'Nissan', 'BMW', 'Benz', 'Maruti', 'Tata', 'Leyland', 'Other'];
   const [yearOptions, setYearOptions] = useState<string[]>([]);
 
-  const fetchCategoryOptions = () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow" as RequestRedirect,
-    };
+  // Initialize category options state with a default selection
+  const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([{ id: -1, name: 'Select' }]);
 
-    fetch("http://localhost:8082/category/get/all", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        const categories = result.map((item: any) => ({
-          id: item.id,         // categoryId
-          name: item.category  // category name
-        }));
-        setCategoryOptions([{ id: -1, name: 'Select' }, ...categories]); // Prepend 'Select' to the array
-      })
-      .catch((error) => console.error(error));
-  }
+  // Fetch categories from the backend and set options for the category select field
+  const fetchCategoryOptions = async () => {
+    try {
+      const response = await fetch("http://localhost:8082/category/get/all");
+      const result = await response.json();
+      const categories = result.map((item: any) => ({
+        id: item.id,         // categoryId
+        name: item.category  // category name
+      }));
+      setCategoryOptions([{ id: -1, name: 'Select' }, ...categories]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     fetchCategoryOptions();  // Fetch categories when component mounts
 
     const currentYear = new Date().getFullYear(); // get current year
-    const startYear = 2000; // Define starting year
+    const startYear = 2000; // Define starting year for year options
+    // Generate an array of years from startYear to currentYear
     const years = Array.from({ length: currentYear - startYear + 1 }, (_, index) => (startYear + index).toString());
-    setYearOptions(['Select', ...years]); // Prepend 'Select' to the array
+    setYearOptions(['Select', ...years]); // Prepend 'Select' to the year options
   }, []);
 
-  const [formData, setFormData] = useState(
-    {
-      ownerId: 0,
-      categoryId: 0,
-      make: '',
-      year: '',
-      model: '',
-      color: '',
-      mileage: '',
-      regNo: '',
-      mainImageUrl: '', // Store the main image URL
-      additionalImageUrls: [] as string[], // Store additional image URLs
-    });
+  const [formData, setFormData] = useState({
+    ownerId: 0,
+    categoryId: 0,
+    make: '',
+    year: '',
+    model: '',
+    color: '',
+    mileage: '',
+    regNo: '',
+    //mainImageUrl: '', // Store the main image URL
+    //additionalImageUrls: [] as string[], // Store additional image URLs
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  // Handle input changes and update form data state
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: name === 'ownerId' || name === 'categoryId' ? Number(value) : value,
+      [name]: name === "ownerId" || name === "categoryId" ? Number(value) : value,
     }));
   };
 
-  const handleMainImageUpload = (images: string[]) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      mainImageUrl: images[0], // Replace the main image
-    }));
+  //Import Selected Images From Input File Field
+  const [mainImage, setMainImage] = useState<File | null>(null); // Store the main image file
+  const [additionalImages, setAdditionalImages] = useState<File[]>([]); // Store additional image files
+
+  // Function to handle the main image from InputFileField (passed as prop)
+  const handleMainImageFromChild = (imageArray: File[]) => {
+    if (imageArray.length > 0) {
+      setMainImage(imageArray[0]); // Set the first file as the main image (single file upload)
+    }
   };
 
-  const handleAdditionalImagesUpload = (images: string[]) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      additionalImageUrls: [...prevFormData.additionalImageUrls, ...images], // Append additional images
-    }));
+  // Function to handle additional images from InputFileField (passed as prop)
+  const handleAdditionalImageFromChild = (imageArray: File[]) => {
+    setAdditionalImages(imageArray); // Set the array of additional images
   };
 
-  const handleSubmit = () => {
+  //Upload an image to Cloudinary and return the URL
+  const uploadImageToCloudinary = async (image: File) => {
 
-    if (!formData.categoryId || !formData.make || !formData.year || !formData.model || !formData.color || !formData.mileage || !formData.regNo) {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "i3rttw6d"); //Cloudinary upload preset
+    formData.append("cloud_name", "dxem0e46h"); //Cloudinary cloud name
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/dxem0e46h/image/upload`, // Cloudinary API endpoint
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    return data.secure_url; // Return the URL of the uploaded image
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    if (!mainImage || additionalImages.length === 0) {
       Swal.fire({
-        icon: 'warning',
-        title: 'Incomplete Data',
-        text: 'Please fill in all the required fields.',
+        icon: "warning",
+        title: "Incomplete Data",
+        text: "Please fill in all the required fields and upload images.",
       });
       return;
     }
 
-    if (formData.categoryId === 0 || formData.make === 'Select' || formData.year === 'Select') {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Selection',
-        text: 'Please select valid options for category, make, and year.',
-      });
-      return;
-    }
+    try {
+      // Upload main image and additional images & save Image URLs
+      const mainImageUrl = await uploadImageToCloudinary(mainImage);
 
-    // Send form data as JSON
-    fetch('http://localhost:8082/vehicle/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData), // Send as JSON
-    })
-      .then(response => {
-        if (response.status === 201) { // 201 Created, success
-          return response.text(); // Get response text (message from backend)
-        } else if (response.status === 409) { // 409 Conflict, vehicle already exists
-          throw new Error('Vehicle already registered.');
-        } else if (!response.ok) { // Other errors
-          throw new Error('Something went wrong.');
-        }
-        return response.text(); // Handle other success cases
-      })
-      .then(message => {
+      const additionalImageUrls = await Promise.all(
+        additionalImages.map(uploadImageToCloudinary)
+      );
+
+      // Prepare form data with the URLs from Cloudinary
+      const response = await fetch("http://localhost:8082/vehicle/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,  // Include existing form data
+          mainImageUrl,  // Include the uploaded mainImageUrl
+          additionalImageUrls, // Include the uploaded additionalImageUrls
+        }),
+      });
+
+      if (response.status === 201) {
         Swal.fire({
           position: "center",
           icon: "success",
-          title: message || "Your vehicle is successfully registered",
+          title: "Your vehicle is successfully registered",
           showConfirmButton: false,
-          timer: 2500
+          timer: 2500,
         });
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: error.message || 'An error occurred during registration. Please try again later.',
-        });
+        clearFormData(); // Clear the form after successful submission
+      } else {
+        throw new Error("Something went wrong during registration.");
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Registration Failed",
+        text:
+          (error instanceof Error && error.message) ||
+          "An unexpected error occurred. Please try again later.",
       });
+    }
+  };
+
+  // state to pass as a prop to clear image data in child component (inputFileField)
+  const [clearFilesTrigger, setClearFilesTrigger] = useState(false);
+
+  // Clear form data and reset state
+  const clearFormData = () => {
+    setFormData({
+      ownerId: 0,
+      categoryId: 0,
+      make: "",
+      year: "",
+      model: "",
+      color: "",
+      mileage: "",
+      regNo: "",
+    });
+
+    setMainImage(null); // Clear main image file 
+    setAdditionalImages([]); // Clear additional image files
+
+    setClearFilesTrigger(true);  // Trigger the clear function in the child(Input File Field)
+    setTimeout(() => setClearFilesTrigger(false), 0); // Reset the flag after clearing
   };
 
   return (
     <div>
-      <div className='w-[800px] tablet-or-mobile:w-[360px] bg-white border-2 border-blue-gray-600 shadow-2xl p-8 rounded-3xl max-h-screen  overflow-y-scroll'>
+      <div className='w-[800px] tablet-or-mobile:w-[360px] bg-white border-2 border-blue-gray-600 shadow-2xl p-8 rounded-3xl max-h-screen overflow-y-scroll'>
         <div className="flex justify-center">
           <p className="text-gray-800 text-2xl mt-4 font-semibold">Register Your Vehicle</p>
         </div>
         <div className="grid grid-cols-2">
           <div className="col-span-1 text-sm text-gray-600 p-5">
-
             <SelectFieldType02
               title='Category'
-              options={categoryOptions.map(option => ({ value: option.id, label: option.name }))} // Keep value as number
+              options={categoryOptions.map(option => ({ value: option.id, label: option.name }))}
               onChange={handleChange}
-              value={formData.categoryId} // Ensure this is a number
+              value={formData.categoryId}
               name="categoryId"
             />
             <SelectFieldType01 title='Make' options={makeOptions} classNames="mt-4" onChange={handleChange} value={formData.make} name="make" />
@@ -165,24 +205,23 @@ const RegisterVehicleModal = () => {
           </div>
           <div className="col-span-1 text-sm text-gray-600 p-5">
             <div className="grid gap-6 font-semibold">
-
-              <div className=" border-2 p-2 h-fit">
+              <div className="border-2 p-2 h-fit">
                 <InputFileField
                   title="Add main image"
                   classNames="mt-4"
-                  setImages={handleMainImageUpload}
                   singleFileUpload={true} // Single file upload for main image
+                  clearFiles={clearFilesTrigger} // Pass the trigger to the child component
+                  passArrayToParent={handleMainImageFromChild}
                 />
               </div>
-
               <div className="border-2 p-2 h-fit mt-4">
                 <InputFileField
                   title="Add additional images"
                   classNames="mt-4"
-                  setImages={handleAdditionalImagesUpload}
+                  singleFileUpload={false} // Allow multiple file uploads for additional images
+                  clearFiles={clearFilesTrigger} // Pass the trigger to the child component
+                  passArrayToParent={handleAdditionalImageFromChild}
                 />
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                </div>
               </div>
             </div>
           </div>
@@ -192,7 +231,7 @@ const RegisterVehicleModal = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default RegisterVehicleModal
