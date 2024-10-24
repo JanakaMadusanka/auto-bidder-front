@@ -18,7 +18,7 @@ const InputFieldTypePassword = ({ title, classNames, inputSize, onChange, value,
     };
 
     return (
-        <div className={`place-items-center w-full ${classNames}`}>
+        <div className={`w-full ${classNames}`}>
             <div className="font-semibold"><p >{`${title} :`}</p></div >
             <div className="relative">
                 <input
