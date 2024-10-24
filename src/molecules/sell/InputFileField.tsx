@@ -1,51 +1,44 @@
-import Axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 interface InputFieldProps {
   singleFileUpload?: boolean; // Optional prop for single file upload
   title: string;
   classNames?: string;
-  setImages: (images: string[]) => void;
+  clearFiles?: boolean;
+  passArrayToParent: (images: File[]) => void;
 }
 
-const InputFileField = ({ classNames, setImages, title, singleFileUpload = false }: InputFieldProps) => {
-  const [fileUrls, setFileUrls] = useState<string[]>([]); // State to store file URLs
+const InputFileField = ({ classNames, title, singleFileUpload = false, clearFiles, passArrayToParent }: InputFieldProps) => {
+
+  const [files, setFiles] = useState<File[]>([]); // State to store files
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      uploadFiles(files);
+    const selectedFiles = e.target.files;
+    if (selectedFiles) {
+      if (singleFileUpload) {
+        setFiles([selectedFiles[0]]); //Replace new file if single file upload is enabled
+      } else {
+        const newFilesArray = Array.from(selectedFiles); // For multiple file upload, append new files
+        setFiles(prevFiles => [...prevFiles, ...newFilesArray]);
+      }
     }
+    e.target.value = ''; // Reset file input so the same file can be selected again
   };
 
-  const uploadFiles = (files: FileList) => {
-    const uploadPromises = Array.from(files).map(uploadSingleFile); // Upload each file
-
-    Promise.all(uploadPromises)
-      .then((responses) => {
-        const uploadedUrls = responses.map((res) => res.data.secure_url);
-
-        // If single file upload, replace the entire state, otherwise append
-        if (singleFileUpload) {
-          setFileUrls(uploadedUrls);
-          setImages(uploadedUrls);
-        } else {
-          const updatedUrls = [...fileUrls, ...uploadedUrls];  // Append new URLs
-          setFileUrls(updatedUrls);
-          setImages(updatedUrls);  // Set the final updated array directly
-        }
-      })
-      .catch((error) => {
-        console.error('Upload failed', error);
-      });
+  const handleRemoveFile = (index: number) => {
+    setFiles(prevFiles => prevFiles.filter((_, i) => i !== index)); // Remove the file at the specified index
   };
 
-  const uploadSingleFile = (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'i3rttw6d'); // Cloudinary upload preset
+  // Passing Files array to the parent whenever files array changes
+  useEffect(() => {
+    passArrayToParent(files); // Pass the current array of files to the parent
+  }, [files, passArrayToParent]);
 
-    return Axios.post('https://api.cloudinary.com/v1_1/dxem0e46h/image/upload', formData);
-  };
+  // Use useEffect to clear files when the `clearFiles` prop is set to true
+  useEffect(() => {
+    if (clearFiles) {
+      setFiles([]); // Clear the files array when clearFiles is true
+    }
+  }, [clearFiles]);
 
   return (
     <div className={`mb-4 ${classNames}`}>
@@ -62,8 +55,20 @@ const InputFileField = ({ classNames, setImages, title, singleFileUpload = false
         </div>
       </div>
       <div className="border-2 p-2 h-fit">
-        {fileUrls.map((url, index) => (
-          <img key={index} src={url} alt={`Uploaded ${index}`} className="mt-2 max-w-full h-auto" />
+        {files.map((file, index) => (
+          <div key={index}>
+            <img
+              src={URL.createObjectURL(file)} // Use URL.createObjectURL to preview the image
+              alt={`Preview ${index}`}
+              className="mt-2 max-w-full h-auto"
+            />
+            <button
+              onClick={() => handleRemoveFile(index)} // Call the delete handler
+              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 w-full"
+            >
+              Remove
+            </button>
+          </div>
         ))}
       </div>
     </div>
