@@ -3,15 +3,15 @@ import img1 from "../assets/home/carosul1.png"
 import img2 from "../assets/home/carosul2.png"
 import img3 from "../assets/home/carosul3.png"
 import img4 from "../assets/home/carosul4.png"
-import img5 from "../assets/home/audi-homepage.png"
-
-
-
 
 const Home = () => {
     return (
         <div>
-            <Carousel>
+            <Carousel
+                className="rounded-xl"
+                autoplay={true}
+                loop={true}
+            >
                 <img
                     src={img1}
                     alt="image 1"
