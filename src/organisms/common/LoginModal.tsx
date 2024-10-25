@@ -6,8 +6,8 @@ import InputFieldTypePassword from "../../atoms/common/InputFieldTypePassword";
 import Swal from "sweetalert2";
 
 interface LoginModalProps {
-  setIsLogged: (value:boolean)=>void;
-  setLoggedUser: (value:string)=>void;
+  setIsLogged: (value:boolean)=>void; // Function to set login status
+  setLoggedUser: (value:string)=>void; // Function to store the logged user's email
 }
 
 const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
@@ -16,10 +16,11 @@ const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
     "email": "",
     "password": ""
   });
-  const [isValidEmail, setIsValidEmail] = useState(true);
-  const [isMatch, setIsMatch] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(true); // State to validate email
+  const [isMatch, setIsMatch] = useState(true); // State to check if credentials match
 
-  const handleChange = (e) => {
+  // Handle input changes for email and password fields
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setLoginData((prevLoginData) => ({
       ...prevLoginData,
@@ -27,6 +28,7 @@ const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
     }));
   };
 
+  // Validate email format on blur (when the input field loses focus)
   const handleBlur = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //Regex for email
     const isValidEmails = emailRegex.test(loginData.email);// Validate emails
@@ -37,6 +39,7 @@ const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
     }
   }
 
+   // Handle login when the "Log in" button is clicked
   const loginClick = () => {
 
     if (isValidEmail) {
@@ -49,13 +52,13 @@ const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
         method: "POST",
         headers: myHeaders,
         body: raw,
-        redirect: "follow"
+        redirect: "follow" as RequestRedirect,
       };
 
       fetch("http://localhost:8081/login/request", requestOptions)
         .then((response) => response.text())
         .then((result) => {
-          if (result == "true") {
+          if (result == "true") { // If login is successful
             setIsMatch(true);
             Swal.fire({
               position: "center",
@@ -64,9 +67,9 @@ const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
               showConfirmButton: false,
               timer: 2500
             });
-            setIsLogged(true);
-            setLoggedUser(loginData.email);
-          } else {
+            setIsLogged(true);  // Set user as logged in
+            setLoggedUser(loginData.email); // Store the email of the logged-in user
+          } else { // If login is not successful
             setIsMatch(false);
           }
         })
