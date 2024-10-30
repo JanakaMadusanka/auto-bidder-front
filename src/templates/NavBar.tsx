@@ -4,6 +4,7 @@ import LoginModal from '../organisms/common/LoginModal';
 import RegistrationModal from '../organisms/common/RegistrationModal';
 import Swal from "sweetalert2";
 import ProfileModal from '../organisms/common/ProfileModal';
+import { useAuth } from "../context/AuthContext";
 
 interface NavBarProps {
     homeButtonOnAction?: () => void;
@@ -16,12 +17,10 @@ interface NavBarProps {
 
 const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction, myAuctionButtonOnAction, aboutButtonOnAction, contactButtonOnAction }: NavBarProps) => {
 
+    const { isLogged, setIsLogged} = useAuth(); // Use the context to use logging status and change login stateus
     const [loginVisibility, setLoginVisibility] = useState(false) //State for login Modal
-    const [isLogged, setIsLogged] = useState(false);
     const [registerVisibility, setRegisterVisibility] = useState(false) //State for register Modal
     const [profileVisibility, setProfileVisibility] = useState(false) //State for profile Modal
-    const [loggedUser, setLoggedUser] = useState("loged user"); //State to keep Logging email
-    
 
     function loginButtonOnAction() {
         setLoginVisibility(true);
@@ -38,7 +37,6 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
 
     function logoutButtonOnAction() {
         setIsLogged(false);
-        setLoggedUser("logged user")
         Swal.fire({
             position: "center",
             icon: "success",
@@ -51,9 +49,11 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
     function registerButtonOnAction() {
         setRegisterVisibility(true);
     }
+
     function closeRegisterModal() {
         setRegisterVisibility(false);
     }
+
     function handleRegisterOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
         // Close the modal if the click is on the overlay, not inside the modal content
         if (e.target === e.currentTarget) {
@@ -64,17 +64,17 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
     function profileButtonOnAction() {
         setProfileVisibility(true);
     }
+
     function closeProfileModal() {
         setProfileVisibility(false);
     }
+
     function handleProfileOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
         // Close the modal if the click is on the overlay, not inside the modal content
         if (e.target === e.currentTarget) {
             closeProfileModal();
         }
     }
-
-
 
     // set navitation
     return (
@@ -115,7 +115,7 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
                     className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                     onClick={handleLoginOverlayClick}
                 >
-                    <LoginModal setIsLogged={setIsLogged} setLoggedUser={setLoggedUser}/>
+                    <LoginModal />
                 </div>
             )}
 
@@ -132,7 +132,7 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
                     className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                     onClick={handleProfileOverlayClick}
                 >
-                    <ProfileModal loggedUser={loggedUser} />
+                    <ProfileModal />
                 </div>
             )}
         </div>

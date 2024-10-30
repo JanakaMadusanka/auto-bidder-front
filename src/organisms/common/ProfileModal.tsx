@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import ButtonType01 from "../../atoms/common/ButtonType01";
 import InputFieldType01 from "../../atoms/common/InputFieldType01";
+import { useAuth } from "../../context/AuthContext"; //Import the custom hook 
 
-interface ProfileModalProps {
-  loggedUser: string;
-}
+const ProfileModal = () => {
 
-const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
+  const { loggedUserId } = useAuth(); // Use the context to set logged user
 
   const [profile, setProfile] = useState({
     firstName: "",
@@ -18,7 +17,7 @@ const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
   useEffect(() => {
 
     // fetch data to get Profile details from server
-    fetch(`http://localhost:8081/user/search-by-email/${loggedUser}`)
+    fetch(`http://localhost:8081/user/search-by-email/${loggedUserId}`)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -32,7 +31,7 @@ const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
       })
       .catch((error) => console.error(error));
 
-  }, [loggedUser])
+  }, [loggedUserId])
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -51,11 +50,11 @@ const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
         <div className="flex justify-center h">
           <p className="text-gray-800 text-2xl font-semibold">User Profile</p>
         </div>
-        <p className="flex justify-center text-gray-800 font-semibold">({loggedUser})</p>
+        <p className="flex justify-center text-gray-800 font-semibold">({loggedUserId})</p>
         <div className="text-sm text-gray-600">
-          <InputFieldType01 title='First Name' classNames="mt-3" inputSize="h-9" value={profile.firstName} onChange={handleChange} name="firstName" readOnly={true}/>
-          <InputFieldType01 title='Last Name' classNames="mt-3" inputSize="h-9" value={profile.lastName} onChange={handleChange} name="lastName" readOnly={true}/>
-          <InputFieldType01 title='Mobile Number' classNames="mt-3" inputSize="h-9" value={profile.mobile} onChange={handleChange} name="mobile" readOnly={true}/>
+          <InputFieldType01 title='First Name' classNames="mt-3" inputSize="h-9" value={profile.firstName} onChange={handleChange} name="firstName" readOnly={true} />
+          <InputFieldType01 title='Last Name' classNames="mt-3" inputSize="h-9" value={profile.lastName} onChange={handleChange} name="lastName" readOnly={true} />
+          <InputFieldType01 title='Mobile Number' classNames="mt-3" inputSize="h-9" value={profile.mobile} onChange={handleChange} name="mobile" readOnly={true} />
           <div className="mt-3">
             <p className="font-semibold">User Roles:</p>
             <ul className="ml-3">

@@ -4,13 +4,11 @@ import CheckBoxType01 from "../../atoms/common/CheckBoxType01";
 import InputFieldType01 from "../../atoms/common/InputFieldType01";
 import InputFieldTypePassword from "../../atoms/common/InputFieldTypePassword";
 import Swal from "sweetalert2";
+import { useAuth } from "../../context/AuthContext"; // Import the custom hook
 
-interface LoginModalProps {
-  setIsLogged: (value:boolean)=>void; // Function to set login status
-  setLoggedUser: (value:string)=>void; // Function to store the logged user's email
-}
+  const LoginModal = () => {
 
-const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
+  const { setIsLogged, setLoggedUserId } = useAuth(); // Use the context to set login state and logged user
 
   const [loginData, setLoginData] = useState({
     "email": "",
@@ -68,7 +66,7 @@ const LoginModal = ({ setIsLogged, setLoggedUser}: LoginModalProps) => {
               timer: 2500
             });
             setIsLogged(true);  // Set user as logged in
-            setLoggedUser(loginData.email); // Store the email of the logged-in user
+            setLoggedUserId(loginData.email); // Store the email of the logged-in user
           } else { // If login is not successful
             setIsMatch(false);
           }
