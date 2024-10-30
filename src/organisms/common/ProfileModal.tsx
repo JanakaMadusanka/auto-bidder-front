@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext"; //Import the custom hook
 
 const ProfileModal = () => {
 
-  const { loggedUserId } = useAuth(); // Use the context to set logged user
+  const { loggedUserEmail } = useAuth(); // Use the context to set logged user
 
   const [profile, setProfile] = useState({
     firstName: "",
@@ -17,7 +17,7 @@ const ProfileModal = () => {
   useEffect(() => {
 
     // fetch data to get Profile details from server
-    fetch(`http://localhost:8081/user/search-by-email/${loggedUserId}`)
+    fetch(`http://localhost:8081/user/search-by-email/${loggedUserEmail}`)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -31,7 +31,7 @@ const ProfileModal = () => {
       })
       .catch((error) => console.error(error));
 
-  }, [loggedUserId])
+  }, [loggedUserEmail])
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -50,7 +50,7 @@ const ProfileModal = () => {
         <div className="flex justify-center h">
           <p className="text-gray-800 text-2xl font-semibold">User Profile</p>
         </div>
-        <p className="flex justify-center text-gray-800 font-semibold">({loggedUserId})</p>
+        <p className="flex justify-center text-gray-800 font-semibold">({loggedUserEmail})</p>
         <div className="text-sm text-gray-600">
           <InputFieldType01 title='First Name' classNames="mt-3" inputSize="h-9" value={profile.firstName} onChange={handleChange} name="firstName" readOnly={true} />
           <InputFieldType01 title='Last Name' classNames="mt-3" inputSize="h-9" value={profile.lastName} onChange={handleChange} name="lastName" readOnly={true} />

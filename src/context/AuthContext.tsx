@@ -10,9 +10,9 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 // Define the AurthContext 
 interface AuthContextType {
     isLogged: boolean;
-    loggedUserId: string | null;
+    loggedUserEmail: string | null;
     setIsLogged: (value: boolean) => void;
-    setLoggedUserId: (value: string | null) => void;
+    setLoggedUserEmail: (value: string | null) => void;
 }
 
 // Create the context
@@ -25,10 +25,10 @@ interface AuthProviderProps {
 // Create a provider component
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [isLogged, setIsLogged] = useState(false);
-    const [loggedUserId, setLoggedUserId] = useState<string | null>(null);
+    const [loggedUserEmail, setLoggedUserEmail] = useState<string | null>(null);
 
     return (
-        <AuthContext.Provider value={{ isLogged, loggedUserId, setIsLogged, setLoggedUserId }}>
+        <AuthContext.Provider value={{ isLogged, loggedUserEmail, setIsLogged, setLoggedUserEmail }}>
             {children}
         </AuthContext.Provider>
     );

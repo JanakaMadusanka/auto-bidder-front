@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext"; // Import the custom hook
 
   const LoginModal = () => {
 
-  const { setIsLogged, setLoggedUserId } = useAuth(); // Use the context to set login state and logged user
+  const { setIsLogged, setLoggedUserEmail } = useAuth(); // Use the context to set login state and logged user
 
   const [loginData, setLoginData] = useState({
     "email": "",
@@ -66,7 +66,7 @@ import { useAuth } from "../../context/AuthContext"; // Import the custom hook
               timer: 2500
             });
             setIsLogged(true);  // Set user as logged in
-            setLoggedUserId(loginData.email); // Store the email of the logged-in user
+            setLoggedUserEmail(loginData.email); // Store the email of the logged-in user
           } else { // If login is not successful
             setIsMatch(false);
           }
