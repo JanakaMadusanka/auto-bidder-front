@@ -18,13 +18,7 @@ const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
   useEffect(() => {
 
     // fetch data to get Profile details from server
-
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow"
-    };
-
-    fetch(`http://localhost:8081/user/search-by-email/${loggedUser}`, requestOptions)
+    fetch(`http://localhost:8081/user/search-by-email/${loggedUser}`)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -49,7 +43,6 @@ const ProfileModal = ({ loggedUser }: ProfileModalProps) => {
   }
 
   function handleEditProfile() {
-
   }
 
   return (
