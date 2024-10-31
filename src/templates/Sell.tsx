@@ -1,8 +1,6 @@
 import { useState } from "react";
 import RegisterVehecleModal from "../organisms/sell/RegisterVehicleModal";
 import SellHedder from "../organisms/sell/SellHedder";
-import RegisterdVehicleList from "../organisms/sell/RegisterdVehicleList";
-import SelectedToOction from "../organisms/sell/SelectedToOction";
 
 const Sell = () => {
 
@@ -24,8 +22,6 @@ const Sell = () => {
   return (
     <div>
       <SellHedder clickNavigation1={registerVehecleButtonOnAction} />
-      <RegisterdVehicleList/>
-      <SelectedToOction/>
 
       {
         registerVisibility && (
@@ -37,7 +33,6 @@ const Sell = () => {
           </div>
         )
       }
-
       
     </div>
   )
