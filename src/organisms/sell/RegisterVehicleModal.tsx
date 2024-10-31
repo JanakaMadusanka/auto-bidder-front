@@ -5,6 +5,7 @@ import SelectFieldType02 from "../../atoms/common/SelectFieldType02";
 import InputFileField from "../../molecules/sell/InputFileField";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { useAuth } from "../../context/AuthContext"; //Import the custom hook 
 
 interface CategoryOption {
   id: number;
@@ -13,6 +14,7 @@ interface CategoryOption {
 
 const RegisterVehicleModal = () => {
 
+  const { loggedUserId } = useAuth(); // Use the context to set logged user
   const makeOptions = ['Select', 'Toyota', 'Honda', 'Nissan', 'BMW', 'Benz', 'Maruti', 'Tata', 'Leyland', 'Other'];
   const [yearOptions, setYearOptions] = useState<string[]>([]);
 

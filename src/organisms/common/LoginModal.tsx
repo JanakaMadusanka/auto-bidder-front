@@ -6,9 +6,9 @@ import InputFieldTypePassword from "../../atoms/common/InputFieldTypePassword";
 import Swal from "sweetalert2";
 import { useAuth } from "../../context/AuthContext"; // Import the custom hook
 
-  const LoginModal = () => {
+const LoginModal = () => {
 
-  const { setIsLogged, setLoggedUserEmail } = useAuth(); // Use the context to set login state and logged user
+  const { setIsLogged, setLoggedUserId } = useAuth(); // Use the context to set login state and logged user
 
   const [loginData, setLoginData] = useState({
     "email": "",
@@ -37,7 +37,7 @@ import { useAuth } from "../../context/AuthContext"; // Import the custom hook
     }
   }
 
-   // Handle login when the "Log in" button is clicked
+  // Handle login when the "Log in" button is clicked
   const loginClick = () => {
 
     if (isValidEmail) {
@@ -66,7 +66,6 @@ import { useAuth } from "../../context/AuthContext"; // Import the custom hook
               timer: 2500
             });
             setIsLogged(true);  // Set user as logged in
-            setLoggedUserEmail(loginData.email); // Store the email of the logged-in user
           } else { // If login is not successful
             setIsMatch(false);
           }
@@ -75,6 +74,13 @@ import { useAuth } from "../../context/AuthContext"; // Import the custom hook
     }
   }
 
+  //get logged user Id
+  fetch(`http://localhost:8081/user/search-by-email/${loginData.email}`)
+    .then((response) => response.json())
+    .then((result) => {
+      setLoggedUserId(result.id); // Store the email of the logged-in user
+    })
+    .catch((error) => console.error(error));
 
   return (
     <div>

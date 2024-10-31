@@ -5,9 +5,10 @@ import { useAuth } from "../../context/AuthContext"; //Import the custom hook
 
 const ProfileModal = () => {
 
-  const { loggedUserEmail } = useAuth(); // Use the context to set logged user
+  const { loggedUserId} = useAuth(); // Use the context to set logged user
 
   const [profile, setProfile] = useState({
+    email: "",
     firstName: "",
     lastName: "",
     mobile: "",
@@ -17,12 +18,13 @@ const ProfileModal = () => {
   useEffect(() => {
 
     // fetch data to get Profile details from server
-    fetch(`http://localhost:8081/user/search-by-email/${loggedUserEmail}`)
+    fetch(`http://localhost:8081/user/search-by-id/${loggedUserId}`)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
         const userRoleSet = new Set(result.userRole);
         setProfile({
+          email: result.email,
           firstName: result.firstName,
           lastName: result.lastName,
           mobile: result.mobile,
@@ -31,7 +33,7 @@ const ProfileModal = () => {
       })
       .catch((error) => console.error(error));
 
-  }, [loggedUserEmail])
+  }, [loggedUserId])
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -50,9 +52,9 @@ const ProfileModal = () => {
         <div className="flex justify-center h">
           <p className="text-gray-800 text-2xl font-semibold">User Profile</p>
         </div>
-        <p className="flex justify-center text-gray-800 font-semibold">({loggedUserEmail})</p>
+        <p className="flex justify-center text-gray-800 font-semibold">({profile.email})</p>
         <div className="text-sm text-gray-600">
-          <InputFieldType01 title='First Name' classNames="mt-3" inputSize="h-9" value={profile.firstName} onChange={handleChange} name="firstName" readOnly={true} />
+          <InputFieldType01 title='First Name' classNames="mt-3" inputSize="h-9" value={profile.email} onChange={handleChange} name="firstName" readOnly={true} />
           <InputFieldType01 title='Last Name' classNames="mt-3" inputSize="h-9" value={profile.lastName} onChange={handleChange} name="lastName" readOnly={true} />
           <InputFieldType01 title='Mobile Number' classNames="mt-3" inputSize="h-9" value={profile.mobile} onChange={handleChange} name="mobile" readOnly={true} />
           <div className="mt-3">
