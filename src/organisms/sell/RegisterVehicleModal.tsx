@@ -59,6 +59,14 @@ const RegisterVehicleModal = () => {
     //additionalImageUrls: [] as string[], // Store additional image URLs
   });
 
+  // adding logged user id as a ownerId field of the form data
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      ownerId: Number(loggedUserId) || 0,  // Ensure loggedUserId is a number, default to 0 if it's undefined or not a valid number
+    }));
+  }, [loggedUserId]);
+
   // Handle input changes and update form data state
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
