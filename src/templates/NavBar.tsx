@@ -17,7 +17,7 @@ interface NavBarProps {
 
 const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction, myAuctionButtonOnAction, aboutButtonOnAction, contactButtonOnAction }: NavBarProps) => {
 
-    const { isLogged, setIsLogged} = useAuth(); // Use the context to use logging status and change login stateus
+    const { isLogged, setIsLogged, setLoggedUserId} = useAuth(); // Use the context to use logging status and change login stateus
     const [loginVisibility, setLoginVisibility] = useState(false) //State for login Modal
     const [registerVisibility, setRegisterVisibility] = useState(false) //State for register Modal
     const [profileVisibility, setProfileVisibility] = useState(false) //State for profile Modal
@@ -37,6 +37,7 @@ const NavBar = ({ homeButtonOnAction, auctionButtonOnAction, sellButtonOnAction,
 
     function logoutButtonOnAction() {
         setIsLogged(false);
+        setLoggedUserId(null);
         Swal.fire({
             position: "center",
             icon: "success",
