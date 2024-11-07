@@ -1,13 +1,28 @@
-import cardImage from "../../assets/home/carosul1.png"
+interface Vehicle{
+    id: number,
+    ownerId: number,
+    categoryId: number,
+    make: string,
+    year: string,
+    model: string,
+    color: string,
+    mileage: string,
+    regNo: string,
+    mainImageUrl: string, 
+    additionalImageUrls: string[],
+}
+interface props{
+    vehicle: Vehicle
+}
 
-function AuctionCard() {
+const VehicleCard = ({ vehicle}: props) => {
     return (
-        <div className='w-auto p-2 m-2 rounded-2xl bg-gray-50 border border-gray-300 shadow-lg transition-transform duration-300 hover:scale-125 hover:shadow-2xl'>
+        <div className='w-auto p-2 m-2 rounded-2xl bg-gray-50 border border-gray-300 shadow-lg'>
 
             <div className="h-45">
                 <img
-                    src={cardImage}
-                    alt="card-image"
+                    src={vehicle.mainImageUrl}
+                    alt="vehicle-image"
                     className="h-full w-full object-cover"
                 />
             </div>
@@ -23,7 +38,7 @@ function AuctionCard() {
 
             <div>
                 <div className="mb-2 flex items-center justify-between text-gray-800 text-sm mt-2">
-                    <p>Honda Fit Aria, 2007</p>
+                    <p>{`${vehicle.make} ${vehicle.model}, ${vehicle.year}`}</p>
                     <p>LKR.3800000.00</p>
                 </div>
                 <div className="text-gray-600 text-[10px] mt-2">
@@ -42,4 +57,4 @@ function AuctionCard() {
     )
 }
 
-export default AuctionCard
+export default VehicleCard
