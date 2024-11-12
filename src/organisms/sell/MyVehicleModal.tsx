@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import VehicleCard from "../../molecules/sell/VehicleCard";
 
-const MyVehicleModal = () => {
+interface props {
+  setAuctionButtonOnAction?: () => void,
+}
+
+const MyVehicleModal = ({ setAuctionButtonOnAction }: props) => {
 
   const { loggedUserId } = useAuth(); // Use the context to set the logged user
-
   const [vehicles, setVehicles] = useState<any[]>([]); // State to handle an array of vehicles
 
   useEffect(() => {
@@ -18,7 +21,7 @@ const MyVehicleModal = () => {
 
         // Check the structure of result to make sure it's an array of vehicles, set the vehicles state
         if (Array.isArray(result)) {
-          setVehicles(result); 
+          setVehicles(result);
         } else {
           console.error('Expected an array, but got:', result);
         }
@@ -26,10 +29,8 @@ const MyVehicleModal = () => {
         console.error("Error fetching vehicle data:", error);
       }
     };
-
     fetchVehicleData();
   }, [loggedUserId]);
-
 
   return (
     <div>
@@ -40,8 +41,13 @@ const MyVehicleModal = () => {
           </div>
           <div className="grid grid-cols-1">
             {vehicles.map((vehicle) => (
-              <VehicleCard key={vehicle.regNo} vehicle={vehicle} /> // Pass each vehicle to VehicleCard
+              <VehicleCard
+                key={vehicle.regNo}
+                vehicle={vehicle}
+                setAuctionButtonOnAction={setAuctionButtonOnAction}
+              /> // Pass each vehicle to VehicleCard
             ))}
+            <p className="text-3xl font-bold">janaka</p>
           </div>
         </div>
       </div>

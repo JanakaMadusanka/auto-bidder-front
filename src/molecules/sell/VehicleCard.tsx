@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface Vehicle {
     id: number,
     ownerId: number,
@@ -14,32 +12,15 @@ interface Vehicle {
     additionalImageUrls: string[],
 }
 interface props {
-    vehicle: Vehicle
+    vehicle: Vehicle,
+    showImagesButtonOnAction?: () => void,
+    updateButtonOnAction?: () => void,
+    removeButtonOnAction?: () => void,
+    setAuctionButtonOnAction?: () => void,
+    auctionEnabled?: boolean,
 }
 
-const VehicleCard = ({ vehicle }: props) => {
-
-    const [auctionEnabled, setAuctionEnabled] = useState(false);
-
-    const setAuctionButtonOnAction = () => {
-        setAuctionEnabled(true);
-    }
-
-    const stopAuctionButtonOnAction = () => {
-        setAuctionEnabled(false);
-    }
-
-    const showImagesButtonOnAction = () => {
-
-    }
-
-    const updateButtonOnAction = () => {
-
-    }
-
-    const removeButtonOnAction = () => {
-
-    }
+const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, removeButtonOnAction, setAuctionButtonOnAction, auctionEnabled }: props) => {
 
     return (
         <div className='w-auto p-2 m-2 rounded-2xl bg-gray-50 border border-gray-300 shadow-lg'>
@@ -51,7 +32,6 @@ const VehicleCard = ({ vehicle }: props) => {
                     className="h-full w-full object-cover"
                 />
             </div>
-
 
             {auctionEnabled &&
                 <div className="grid grid-cols-2 h-8 rounded-lg" >
@@ -96,6 +76,7 @@ const VehicleCard = ({ vehicle }: props) => {
                     </button>
 
                 </div>
+
                 <div >
                     <button
                         className="w-full h-8 rounded-md bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 text-lg"
@@ -103,7 +84,6 @@ const VehicleCard = ({ vehicle }: props) => {
                     >
                         Show Images
                     </button>
-
                 </div>
             </div>
 
@@ -116,15 +96,7 @@ const VehicleCard = ({ vehicle }: props) => {
                         Set Auction
                     </button>
                 }
-                {auctionEnabled &&
-                    <button className="w-full h-8 rounded-md bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 text-lg"
-                        onClick={stopAuctionButtonOnAction}
-                    >
-                        Stop Auction
-                    </button>
-                }
             </div>
-
         </div>
     )
 }
