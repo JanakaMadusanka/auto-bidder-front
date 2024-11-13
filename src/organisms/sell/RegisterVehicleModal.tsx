@@ -57,6 +57,9 @@ const RegisterVehicleModal = () => {
     regNo: '',
     //mainImageUrl: '', // Store the main image URL
     //additionalImageUrls: [] as string[], // Store additional image URLs
+    isUnderAuction: false,
+    minBidAmount: 0,
+    auctionTimeOut: 72,
   });
 
   // adding logged user id as a ownerId field of the form data
@@ -182,6 +185,9 @@ const RegisterVehicleModal = () => {
       color: "",
       mileage: "",
       regNo: "",
+      isUnderAuction: false,
+      minBidAmount: 0,
+      auctionTimeOut: 72,
     });
 
     setMainImage(null); // Clear main image file 
