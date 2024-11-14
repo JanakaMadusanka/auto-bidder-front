@@ -2,11 +2,28 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import VehicleCard from "../../molecules/sell/VehicleCard";
 
-interface props {
-  setAuctionButtonOnAction?: () => void,
+interface Vehicle {
+  id: number,
+  ownerId: number,
+  categoryId: number,
+  make: string,
+  year: string,
+  model: string,
+  color: string,
+  mileage: string,
+  regNo: string,
+  mainImageUrl: string,
+  additionalImageUrls: string[],
+  isUnderAuction: boolean,
+  minBidAmount:number,
+  auctionTimeOut:number,
 }
 
-const MyVehicleModal = ({ setAuctionButtonOnAction }: props) => {
+interface props {
+  setAuctionButtonOnAction?: (vehicle: Vehicle) => void,
+}
+
+const MyVehicleModal = ({ setAuctionButtonOnAction}: props) => {
 
   const { loggedUserId } = useAuth(); // Use the context to set the logged user
   const [vehicles, setVehicles] = useState<any[]>([]); // State to handle an array of vehicles
@@ -47,7 +64,6 @@ const MyVehicleModal = ({ setAuctionButtonOnAction }: props) => {
                 setAuctionButtonOnAction={setAuctionButtonOnAction}
               /> // Pass each vehicle to VehicleCard
             ))}
-            <p className="text-3xl font-bold">janaka</p>
           </div>
         </div>
       </div>

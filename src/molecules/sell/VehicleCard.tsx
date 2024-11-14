@@ -10,13 +10,16 @@ interface Vehicle {
     regNo: string,
     mainImageUrl: string,
     additionalImageUrls: string[],
+    isUnderAuction: boolean,
+    minBidAmount:number,
+    auctionTimeOut:number,
 }
 interface props {
     vehicle: Vehicle,
     showImagesButtonOnAction?: () => void,
     updateButtonOnAction?: () => void,
     removeButtonOnAction?: () => void,
-    setAuctionButtonOnAction?: () => void,
+    setAuctionButtonOnAction?: (vehicle: Vehicle) => void,
     auctionEnabled?: boolean,
 }
 
@@ -91,7 +94,7 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
                 {!auctionEnabled &&
                     <button
                         className="w-full h-8 rounded-md bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 text-lg"
-                        onClick={setAuctionButtonOnAction}
+                        onClick={() => setAuctionButtonOnAction && setAuctionButtonOnAction(vehicle)}
                     >
                         Set Auction
                     </button>

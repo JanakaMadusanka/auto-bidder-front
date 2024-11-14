@@ -4,17 +4,35 @@ import SellHedder from "../organisms/sell/SellHedder";
 import MyVehicle from "../organisms/sell/MyVehicleModal";
 import SetAuctionModal from "../organisms/sell/SetAuctionModal";
 
+interface Vehicle {
+  id: number,
+  ownerId: number,
+  categoryId: number,
+  make: string,
+  year: string,
+  model: string,
+  color: string,
+  mileage: string,
+  regNo: string,
+  mainImageUrl: string,
+  additionalImageUrls: string[],
+  isUnderAuction: boolean,
+  minBidAmount:number,
+  auctionTimeOut:number,
+}
+
 const Sell = () => {
 
   const [MyComponent, setMyComponent] = useState<JSX.Element | null>(null);
   const [MyComponentVisibility, setMyComponentVisibility] = useState(false);
 
   //Handle Set For Auctuon Button On clic
-  function setAuctionButtonOnAction() {
+  function setAuctionButtonOnAction(vehicle: Vehicle){ // get reg No as a prop 
     setMyComponentVisibility(true);
-    setMyComponent(<SetAuctionModal
+    setMyComponent(<SetAuctionModal 
       backButtonOnAction={myVehiclesButtonOnAction} //Handle back Button of set Auction Modal
-    />)
+      vehicle={vehicle} //Send regNo to SetAuction Modal
+      />)
   }
 
   //Handle Register Button Click
@@ -38,7 +56,7 @@ const Sell = () => {
   //Handle My Vehicle Button Click
   function myVehiclesButtonOnAction() {
     setMyComponentVisibility(true);
-    setMyComponent(<MyVehicle setAuctionButtonOnAction={setAuctionButtonOnAction} />)
+    setMyComponent(<MyVehicle setAuctionButtonOnAction={setAuctionButtonOnAction}/>)
   }
 
   return (
