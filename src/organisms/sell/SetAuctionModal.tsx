@@ -94,9 +94,9 @@ const SetAuctionModal = ({ backButtonOnAction }: props) => {
           <p className="flex justify-center text-gray-800 text-2xl mt-4 font-semibold">Set Auction</p>
           <p className="flex justify-center text-gray-800 text-md mt-4 font-semibold">{`( ${selectedVehicle.regNo} )`}</p>
         </div>
-        
+
         <div className="text-sm text-gray-600 p-5">
-          <div className="flex">
+          <div className="grid grid-cols-2">
             <InputFieldType01
               title='Minimum Bid Value (LKR)'
               inputSize="h-9"
@@ -107,7 +107,7 @@ const SetAuctionModal = ({ backButtonOnAction }: props) => {
             />
             <p className="bg-gray-300 rounded-3xl p-5 ml-2 mt-2">The bid value will be started from minimum bid value</p>
           </div>
-          <div>
+          <div className="grid grid-cols-2">
             <SelectFieldType01
               title='Time Expired (in hours)'
               options={timeOptions.map(option => option.toString())} // Pass numbers as strings for display
