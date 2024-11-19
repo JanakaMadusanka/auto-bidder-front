@@ -1,3 +1,6 @@
+import { useSetAtom } from "jotai";
+import { selectedVehicleAtom } from "../../store/VehicleAtom";
+
 interface Vehicle {
     id: number,
     ownerId: number,
@@ -11,19 +14,26 @@ interface Vehicle {
     mainImageUrl: string,
     additionalImageUrls: string[],
     isUnderAuction: boolean,
-    minBidAmount:number,
-    auctionTimeOut:number,
+    minBidAmount: number,
+    auctionTimeOut: number,
 }
 interface props {
     vehicle: Vehicle,
     showImagesButtonOnAction?: () => void,
     updateButtonOnAction?: () => void,
     removeButtonOnAction?: () => void,
-    setAuctionButtonOnAction?: (vehicle: Vehicle) => void,
+    setAuctionButtonOnAction?: () => void,
     auctionEnabled?: boolean,
 }
 
 const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, removeButtonOnAction, setAuctionButtonOnAction, auctionEnabled }: props) => {
+
+    const setSelectedVehicle = useSetAtom(selectedVehicleAtom); // use setSelectedVehicleAtom in globel state
+
+    const handleSetAuction = () => {
+        setAuctionButtonOnAction?.(); // Call any passed-in action
+        setSelectedVehicle(vehicle); // Set the selected vehicle globally
+    };
 
     return (
         <div className='w-auto p-2 m-2 rounded-2xl bg-gray-50 border border-gray-300 shadow-lg'>
@@ -94,7 +104,7 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
                 {!auctionEnabled &&
                     <button
                         className="w-full h-8 rounded-md bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 text-lg"
-                        onClick={() => setAuctionButtonOnAction && setAuctionButtonOnAction(vehicle)}
+                        onClick={handleSetAuction}
                     >
                         Set Auction
                     </button>
