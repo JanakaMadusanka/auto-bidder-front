@@ -47,7 +47,7 @@ const SetAuctionModal = ({ backButtonOnAction }: props) => {
     }
 
     try {
-      // Prepare form data with the URLs from Cloudinary
+      // Update vehicle with auction data
       const response = await fetch(`http://localhost:8082/vehicle/update/${selectedVehicle.id}`, {
         method: "PUT",
         headers: {

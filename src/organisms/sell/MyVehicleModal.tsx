@@ -4,9 +4,12 @@ import VehicleCard from "../../molecules/sell/VehicleCard";
 
 interface props {
   setAuctionButtonOnAction?: () => void,
+  updateButtonOnAction?: () => void,
+  showImagesButtonOnAction?: () => void,
+  removeButtonOnAction?: () => void,
 }
 
-const MyVehicleModal = ({ setAuctionButtonOnAction }: props) => {
+const MyVehicleModal = ({ setAuctionButtonOnAction, updateButtonOnAction, showImagesButtonOnAction, removeButtonOnAction }: props) => {
 
   const { loggedUserId } = useAuth(); // Use the context to set the logged user
   const [vehicles, setVehicles] = useState<any[]>([]); // State to handle an array of vehicles
@@ -45,6 +48,9 @@ const MyVehicleModal = ({ setAuctionButtonOnAction }: props) => {
                 key={vehicle.regNo}
                 vehicle={vehicle}
                 setAuctionButtonOnAction={setAuctionButtonOnAction}
+                updateButtonOnAction={updateButtonOnAction}
+                showImagesButtonOnAction={showImagesButtonOnAction}
+                removeButtonOnAction={removeButtonOnAction}
               /> // Pass each vehicle to VehicleCard
             ))}
           </div>
