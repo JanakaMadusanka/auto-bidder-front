@@ -34,6 +34,18 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
         setAuctionButtonOnAction?.(); // Call any passed-in action
         setSelectedVehicle(vehicle); // Set the selected vehicle globally
     };
+    const handleUpdate = () => {
+        updateButtonOnAction?.(); // Call any passed-in action
+        setSelectedVehicle(vehicle); // Set the selected vehicle globally
+    };
+    const handleRemove = () => {
+        removeButtonOnAction?.(); // Call any passed-in action
+        setSelectedVehicle(vehicle); // Set the selected vehicle globally
+    };
+    const handleShowImages = () => {
+        showImagesButtonOnAction?.(); // Call any passed-in action
+        setSelectedVehicle(vehicle); // Set the selected vehicle globally
+    };
 
     return (
         <div className='w-auto p-2 m-2 rounded-2xl bg-gray-50 border border-gray-300 shadow-lg'>
@@ -73,7 +85,7 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
                 <div >
                     <button
                         className="w-full h-8 rounded-md bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 text-lg"
-                        onClick={removeButtonOnAction}
+                        onClick={handleRemove}
                     >
                         Remove Vehicle
                     </button>
@@ -83,7 +95,7 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
                 <div >
                     <button
                         className="w-full h-8 rounded-md bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 text-lg"
-                        onClick={updateButtonOnAction}
+                        onClick={handleUpdate}
                     >
                         Update Vehicle
                     </button>
@@ -93,7 +105,7 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
                 <div >
                     <button
                         className="w-full h-8 rounded-md bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 text-lg"
-                        onClick={showImagesButtonOnAction}
+                        onClick={handleShowImages}
                     >
                         Show Images
                     </button>
