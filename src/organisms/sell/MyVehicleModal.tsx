@@ -6,10 +6,9 @@ interface props {
   setAuctionButtonOnAction?: () => void,
   updateButtonOnAction?: () => void,
   showImagesButtonOnAction?: () => void,
-  removeButtonOnAction?: () => void,
 }
 
-const MyVehicleModal = ({ setAuctionButtonOnAction, updateButtonOnAction, showImagesButtonOnAction, removeButtonOnAction }: props) => {
+const MyVehicleModal = ({ setAuctionButtonOnAction, updateButtonOnAction, showImagesButtonOnAction}: props) => {
 
   const { loggedUserId } = useAuth(); // Use the context to set the logged user
   const [vehicles, setVehicles] = useState<any[]>([]); // State to handle an array of vehicles
@@ -50,7 +49,6 @@ const MyVehicleModal = ({ setAuctionButtonOnAction, updateButtonOnAction, showIm
                 setAuctionButtonOnAction={setAuctionButtonOnAction}
                 updateButtonOnAction={updateButtonOnAction}
                 showImagesButtonOnAction={showImagesButtonOnAction}
-                removeButtonOnAction={removeButtonOnAction}
               /> // Pass each vehicle to VehicleCard
             ))}
           </div>

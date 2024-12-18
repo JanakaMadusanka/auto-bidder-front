@@ -1,5 +1,6 @@
 import { useSetAtom } from "jotai";
 import { selectedVehicleAtom } from "../../store/VehicleAtom";
+import Swal from "sweetalert2";
 
 interface Vehicle {
     id: number,
@@ -21,12 +22,11 @@ interface props {
     vehicle: Vehicle,
     showImagesButtonOnAction?: () => void,
     updateButtonOnAction?: () => void,
-    removeButtonOnAction?: () => void,
     setAuctionButtonOnAction?: () => void,
     auctionEnabled?: boolean,
 }
 
-const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, removeButtonOnAction, setAuctionButtonOnAction, auctionEnabled }: props) => {
+const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, setAuctionButtonOnAction, auctionEnabled }: props) => {
 
     const setSelectedVehicle = useSetAtom(selectedVehicleAtom); // use setSelectedVehicleAtom in globel state
 
@@ -38,10 +38,46 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
         updateButtonOnAction?.(); // Call any passed-in action
         setSelectedVehicle(vehicle); // Set the selected vehicle globally
     };
+
     const handleRemove = () => {
-        removeButtonOnAction?.(); // Call any passed-in action
-        setSelectedVehicle(vehicle); // Set the selected vehicle globally
-    };
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        fetch(`http://localhost:8082/vehicle/delete/${vehicle.id}`, {
+          method: "DELETE", 
+          headers: {
+            "Content-Type": "application/json", 
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to delete the vehicle.");
+            }
+            return response.text();
+          })
+
+          .then(() => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success"
+            });
+            //myVehiclesButtonOnAction(); // Refresh or update state after successful deletion
+          })
+      }
+    });
+
+  
+    }
     const handleShowImages = () => {
         showImagesButtonOnAction?.(); // Call any passed-in action
         setSelectedVehicle(vehicle); // Set the selected vehicle globally
