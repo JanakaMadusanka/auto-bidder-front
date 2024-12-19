@@ -1,5 +1,5 @@
 import { useSetAtom } from "jotai";
-import { selectedVehicleAtom } from "../../store/VehicleAtom";
+import { selectedVehicleAtom, myVehiclesAtom } from "../../store/VehicleAtom";
 import Swal from "sweetalert2";
 import VehicleApi from "../../api/VehicleApi";
 
@@ -30,6 +30,7 @@ interface props {
 const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, setAuctionButtonOnAction, auctionEnabled }: props) => {
 
     const setSelectedVehicle = useSetAtom(selectedVehicleAtom); // use setSelectedVehicleAtom in globel state
+    const setMyVehicles = useSetAtom(myVehiclesAtom); // Use setMyVehiclesAtom to update the global vehicles state
 
     const handleSetAuction = () => {
         setAuctionButtonOnAction?.(); // Call any passed-in action
@@ -64,7 +65,12 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
                         text: "Your file has been deleted.",
                         icon: "success",
                     });
-                    // myVehiclesButtonOnAction(); // Uncomment this to refresh or update the state after successful deletion
+
+                    // Refresh the vehicles atom
+                    const updatedVehicles = await VehicleApi.searchByOwner(vehicle.ownerId.toString()); // Fetch updated list
+                    setMyVehicles(updatedVehicles); // Update the atom with the new list
+
+
                 } catch (error) {
                     Swal.fire({
                         title: "Error!",

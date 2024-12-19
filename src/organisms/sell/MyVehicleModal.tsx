@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import VehicleCard from "../../molecules/sell/VehicleCard";
 import VehicleApi from "../../api/VehicleApi";
+import { useAtom } from 'jotai';
+import { myVehiclesAtom } from "../../store/VehicleAtom";
 
 interface props {
   setAuctionButtonOnAction?: () => void,
@@ -9,10 +11,11 @@ interface props {
   showImagesButtonOnAction?: () => void,
 }
 
-const MyVehicleModal = ({ setAuctionButtonOnAction, updateButtonOnAction, showImagesButtonOnAction}: props) => {
+const MyVehicleModal = ({ setAuctionButtonOnAction, updateButtonOnAction, showImagesButtonOnAction }: props) => {
 
   const { loggedUserId } = useAuth(); // Use the context to set the logged user
-  const [vehicles, setVehicles] = useState<any[]>([]); // State to handle an array of vehicles
+  // const [vehicles, setVehicles] = useState<any[]>([]); // State to handle an array of vehicles
+  const [vehicles, setVehicles] = useAtom(myVehiclesAtom); // Use global atom for vehicles
 
   useEffect(() => {
     const fetchVehicleData = async () => {
@@ -32,7 +35,7 @@ const MyVehicleModal = ({ setAuctionButtonOnAction, updateButtonOnAction, showIm
       }
     };
     fetchVehicleData();
-  }, [loggedUserId]);
+  }, [loggedUserId, setVehicles]);
 
   return (
     <div>
