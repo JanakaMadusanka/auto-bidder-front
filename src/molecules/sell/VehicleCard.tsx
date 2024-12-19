@@ -1,6 +1,7 @@
 import { useSetAtom } from "jotai";
 import { selectedVehicleAtom } from "../../store/VehicleAtom";
 import Swal from "sweetalert2";
+import VehicleApi from "../../api/VehicleApi";
 
 interface Vehicle {
     id: number,
@@ -41,43 +42,41 @@ const VehicleCard = ({ vehicle, showImagesButtonOnAction, updateButtonOnAction, 
 
     const handleRemove = () => {
 
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-      if (result.isConfirmed) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
 
-        fetch(`http://localhost:8082/vehicle/delete/${vehicle.id}`, {
-          method: "DELETE", 
-          headers: {
-            "Content-Type": "application/json", 
-          },
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Failed to delete the vehicle.");
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+
+                try {
+                    const response = await VehicleApi.deleteById(vehicle.id);
+                    if (!response.ok) {
+                        throw new Error(`Failed to delete: ${response.status} - ${response.statusText}`);
+                    }
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success",
+                    });
+                    // myVehiclesButtonOnAction(); // Uncomment this to refresh or update the state after successful deletion
+                } catch (error) {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "There was a problem deleting the file.",
+                        icon: "error",
+                    });
+                    console.error("Delete failed:", error);
+                }
             }
-            return response.text();
-          })
-
-          .then(() => {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success"
-            });
-            //myVehiclesButtonOnAction(); // Refresh or update state after successful deletion
-          })
-      }
-    });
-
-  
+        })
     }
+
     const handleShowImages = () => {
         showImagesButtonOnAction?.(); // Call any passed-in action
         setSelectedVehicle(vehicle); // Set the selected vehicle globally

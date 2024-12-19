@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import VehicleCard from "../../molecules/sell/VehicleCard";
+import VehicleApi from "../../api/VehicleApi";
 
 interface props {
   setAuctionButtonOnAction?: () => void,
@@ -18,8 +19,7 @@ const MyVehicleModal = ({ setAuctionButtonOnAction, updateButtonOnAction, showIm
       if (!loggedUserId) return; // Avoid fetch if loggedUserId is not available
 
       try {
-        const response = await fetch(`http://localhost:8082/vehicle/search-by-owner/${loggedUserId}`);
-        const result = await response.json();
+        const result = await VehicleApi.searchByOwner(loggedUserId);
 
         // Check the structure of result to make sure it's an array of vehicles, set the vehicles state
         if (Array.isArray(result)) {
