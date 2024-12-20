@@ -4,7 +4,7 @@ import CheckBoxType01 from "../../atoms/common/CheckBoxType01";
 import InputFieldType01 from "../../atoms/common/InputFieldType01";
 import InputFieldTypePassword from "../../atoms/common/InputFieldTypePassword";
 import Swal from "sweetalert2";
-import { useAuth } from "../../context/AuthContext"; // Import the custom hook
+import { useAuth } from "../../../context/AuthContext"; // Import the custom hook
 
 const LoginModal = () => {
 

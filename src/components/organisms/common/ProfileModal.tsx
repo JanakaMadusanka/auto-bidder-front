@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ButtonType01 from "../../atoms/common/ButtonType01";
 import InputFieldType01 from "../../atoms/common/InputFieldType01";
-import { useAuth } from "../../context/AuthContext"; //Import the custom hook 
+import { useAuth } from "../../../context/AuthContext"; //Import the custom hook 
 
 const ProfileModal = () => {
 

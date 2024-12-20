@@ -5,7 +5,7 @@ import SelectFieldType02 from "../../atoms/common/SelectFieldType02";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useAtom } from "jotai";
-import { selectedVehicleAtom } from "../../store/VehicleAtom";
+import { selectedVehicleAtom } from "../../../store/VehicleAtom";
 
 interface CategoryOption {
   id: number;

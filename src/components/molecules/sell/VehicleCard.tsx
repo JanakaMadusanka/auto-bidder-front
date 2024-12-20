@@ -1,7 +1,7 @@
 import { useSetAtom } from "jotai";
-import { selectedVehicleAtom, myVehiclesAtom } from "../../store/VehicleAtom";
+import { selectedVehicleAtom, myVehiclesAtom } from "../../../store/VehicleAtom";
 import Swal from "sweetalert2";
-import VehicleApi from "../../api/VehicleApi";
+import VehicleApi from "../../../api/VehicleApi";
 
 interface Vehicle {
     id: number,

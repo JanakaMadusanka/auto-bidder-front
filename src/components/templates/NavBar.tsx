@@ -4,7 +4,7 @@ import LoginModal from '../organisms/common/LoginModal';
 import RegistrationModal from '../organisms/common/RegistrationModal';
 import Swal from "sweetalert2";
 import ProfileModal from '../organisms/common/ProfileModal';
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 interface NavBarProps {
     homeButtonOnAction?: () => void;

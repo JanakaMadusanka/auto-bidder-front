@@ -3,7 +3,7 @@ import InputFieldType01 from "../../atoms/common/InputFieldType01";
 import ButtonType01 from "../../atoms/common/ButtonType01";
 import SelectFieldType01 from "../../atoms/common/SelectFieldType01";
 import { useAtom } from "jotai";
-import { selectedVehicleAtom } from "../../store/VehicleAtom";
+import { selectedVehicleAtom } from "../../../store/VehicleAtom";
 
 interface props {
   backButtonOnAction?: () => void;

@@ -18,6 +18,19 @@ const VehicleApi = {
             throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
         return response;
+    },
+
+    deleteImage: async (url: string) => {
+        const response = await fetch(`http://localhost:8082/image/delete/${url}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+        return response;
     }
 }
 

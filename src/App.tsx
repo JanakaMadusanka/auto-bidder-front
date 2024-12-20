@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import './App.css'
-import Home from './templates/Home'
-import NavBar from './templates/NavBar'
-import Sell from './templates/Sell'
-import Auction from './templates/Auction'
-import About from './templates/About'
-import Contact from './templates/Contact'
-import MyAuction from './templates/MyAuction'
-import Footer from './templates/Footer'
+import Home from './components/templates/Home'
+import NavBar from './components/templates/NavBar'
+import Sell from './components/templates/Sell'
+import Auction from './components/templates/Auction'
+import About from './components/templates/About'
+import Contact from './components/templates/Contact'
+import MyAuction from './components/templates/MyAuction'
+import Footer from './components/templates/Footer'
 
 const App = () => {
 
